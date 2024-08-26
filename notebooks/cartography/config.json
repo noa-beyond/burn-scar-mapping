@@ -18,5 +18,89 @@
     "third_logo_path":"C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/BEYOND_LOGO.png",
     "fourth_logo_path":"C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/eratosthenes.png",
     "burned_map_path":"C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/temp/map_burned.png",
-    "cropped_burned_map_path":"C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/map_burned_cropped.png"
+    "cropped_burned_map_path":"C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/map_burned_cropped.png",
+
+    "shapefile1": {
+        "path": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/penteli/final_burned_varnavas.shp",
+        "espg": "EPSG:32634"
+    },
+    "shapefile2": {
+        "path": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/greece-latest-free-shp/gis_osm_places_free_1.shp",
+        "espg": "EPSG:4326"
+    },
+    "shapefile3": {
+        "path": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/BSM_2009_Attiki/BSM_2009_Attiki.shp",
+        "espg": "EPSG:4326"
+    },
+    "dates": {
+        "detect": "11/08/2024 15:15",
+        "raw": "07/08/2024 και 13/08/2024",
+        "map": "14/08/2024"
+    },
+    "logos": {
+        "north": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/north.png",
+        "x_north": 1.75,
+        "y_north": 0.5,
+        "first": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/AsteroskopoioLogoOuranidon.jpg",
+        "second": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/IAADET.png",
+        "third": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/BEYOND_LOGO.png",
+        "fourth": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/eratosthenes.png",
+        "x": 0.1,
+        "y": 1.05
+    },
+    "image_paths": {
+        "burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/temp/map_burned.png",
+        "cropped_burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/map_burned_cropped.png"
+    },
+    "FireHub": {
+        "name": "FireHub",
+        "x": 1.54,
+        "y": 1.08
+    },
+    "Ypomnima": {
+        "name": "Υπόμνημα",
+        "y": 0.53
+    },
+    "place": {
+        "name": "Βορειοανατολική Αττική",
+        "y": 0.98
+    },
+    "subtitle": {
+        "name": "Απεικόνιση πυρκαγιών 2009-2024",
+        "y": 0.97
+    },
+    "production_date": {
+        "name": "Ημερομηνία Παραγωγής: ",
+        "x": 1.285,
+        "y": 0.93
+    },
+    "map_information": {
+        "name": "Πληροφορίες Χάρτη",
+        "y_name": 0.31,
+        "text": "Ο χάρτης έχει δημιουργηθεί από το Κέντρο Αριστείας BEYOND του\nΙΑΑΔΕΤ/ΕΑΑ. O σκοπός του προϊόντος αυτού είναι να δώσει μια\nσύγκρίση της επιφάνειας των καμένων εκτάσεων των πυρκαγιών στη\nΒορειοανατολική Αττική, το 2009 και το 2024, όπου ανιχνεύτηκε από\nτην υπηρεσία ανίχνευσης και παρακολούθησης πυρκαγιών FireHub\n(http://beyond-eocenter.eu/index.php/web-services/firehub) του Κέντρου\nΕπιστημών Παρατήρησης της Γης και Δορυφορικής Τηλεπισκόπησης\nBEYOND (http://beyond-eocenter.eu/) του ΙΑΑΔΕΤ/ΕΑΑ (www.noa.gr).\n",
+        "y_text": 0.232
+    },
+    "sources": {
+        "name": "Πηγές Δεδομένων",
+        "y_name": 0.159,
+        "text": "Επεξεργασμένες Δορυφορικές Εικόνες.",
+        "y_text": 0.138
+    },
+    "publication": {
+        "name": "Δημοσίευση",
+        "y_name": 0.11,
+        "text": "Το προϊόν διατίθεται μέσω της ιστοσελίδας του BEYOND στην ακόλουθη\nδιεύθυνση URL: http://beyond-eocenter.eu/index.php/fires",
+        "y_text": 0.085
+    },
+    "comunication_details": {
+        "name": "Στοιχεία Επικοινωνίας",
+        "y_name": 0.055,
+        "text": "Δρ. Χάρης Κοντοές, Διευθυντής Ερευνών ΕΑΑ\nE-mail: kontoes@noa.gr",
+        "y_text": 0.03
+    }
+
+
+
+
+
 }
