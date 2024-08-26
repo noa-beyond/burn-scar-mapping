@@ -1,0 +1,18 @@
+{
+    "shapefile1_path":"penteli/final_burned_varnavas.shp",
+    "shapefile2_path":"greece-latest-free-shp/gis_osm_places_free_1.shp",
+    "shapefile3_path":"BSM_2009_Attiki/BSM_2009_Attiki.shp",
+    "place": "Βορειοανατολική Αττική",
+    "detect_date": "11/08/2024 15:15",
+    "area": "9956",
+    "product": "Επεξεργασμένες Δορυφορικές Εικόνες PlanetScope πολύ υψηλής χωρικής\nανάλυσης (3m)",
+    "raw_dates": "07/08/2024 και 13/08/2024",
+    "map_date": "14/08/2024",
+    "north_logo_path":"logos/north.png",
+    "first_logo_path":"logos/AsteroskopoioLogoOuranidon.jpg",
+    "second_logo_path":"logos/IAADET.png",
+    "third_logo_path":"logos/BEYOND_LOGO.png",
+    "fourth_logo_path":"logos/eratosthenes.png",
+    "burned_map_path":"C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/wildfire_mapping-main/wildfire_mapping-main/map_burned.png",
+    "cropped_burned_map_path":"C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/wildfire_mapping-main/wildfire_mapping-main/map_burned_cropped.png"
+}
