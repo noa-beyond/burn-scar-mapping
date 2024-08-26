@@ -14,7 +14,7 @@ class BAStats:
         self.AOI    = BurnedArea_GeoDataFrame
         self.areaOfCatagorys = gp.GeoDataFrame() # final results, just initiate the Series
 
-    # test test test 
+    # test test test branch
     def check_crs(self):
         if self.geo_df.crs != self.AOI.crs:
             print('CRS of Shapefile:  ', self.geo_df.crs)
