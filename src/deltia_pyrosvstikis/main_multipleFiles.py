@@ -1,5 +1,5 @@
 import os
-from pyrosvestiki import DeltiaFire
+from source.pyrosvestiki import DeltiaFire
 import yaml
 # To A/A einai me ellinika grammata
 

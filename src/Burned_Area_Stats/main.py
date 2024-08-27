@@ -1,9 +1,9 @@
 import geopandas as gp
-from BurnedAreaStats import BAStats
+from source.BurnedAreaStats import BAStats
 import matplotlib.pyplot as plt
 import yaml
 import os
-from pie_chart_fnal_python import PlotCLC
+from source.pie_chart_fnal_python import PlotCLC
 
 if __name__ == "__main__":
     # load paths for shapefiles
