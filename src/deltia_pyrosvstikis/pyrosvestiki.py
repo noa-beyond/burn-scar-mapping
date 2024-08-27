@@ -1,12 +1,20 @@
 import pandas as pd
 import os
 import tabula
+import numpy as np
+import sqlite3
+
 class DeltiaFire:
 
     # orizontai to onoma twn dataframes
     def __init__(self, pdf_path_folder):
         self.dfs = self.get_tables_from_pdf(pdf_path_folder)
+        self.pdf_path = pdf_path_folder
+        
+        self.tables = self.fix_tables()
 
+        # Database Stuff
+        self.table_name_database = "Deltia_Pyrosvestikis"
 
     def get_tables_from_pdf(self, pdf_path):
         # get tables from pdf with tabula OCR
@@ -26,7 +34,7 @@ class DeltiaFire:
         return total
 
 
-    def get(self):
+    def fix_tables(self):
         tables = self.dfs
         for i in range(0, len(tables)):
             tables[i].drop(["ΧΡΟΝΟΛΟΓΙΑ",
@@ -81,7 +89,10 @@ class DeltiaFire:
         filled_column = pd.concat([non_nan_values, pd.Series([np.nan] * num_nans)], ignore_index=True)
         return filled_column
 
-    def save_to_database(self, tables, database_path):
+    def save_to_database(self, database_path):
+
+        # pernoume ta tables kai ta ftiaxnoume
+        tables = self.tables
 
         merged_tables = pd.concat(tables, ignore_index=True)
         merged_tables = self.fix_names(merged_tables)
@@ -162,14 +173,82 @@ class DeltiaFire:
 
         # dimourgoume neo arxeio excel an den uparxei idi gia to database
         if not os.path.isfile(database_path):
-            print('Dimiourgia neou Excel Database, den brethike proigoumeno')
-            df.to_excel(database_path, header=True, index=False)
+            print('Dimiourgia neou Sqlite Database, den brethike proigoumeno')
+            connection = sqlite3.connect(database_path)
+
+            df.to_sql(self.table_name_database, connection, if_exists='replace', index=False)
+            connection.close()
         else:
             # enimerooume to uparxwn excel arxeio an uparxei
-            print('Updating Excel...(old entrys)')
-            df_existing = pd.read_excel(database_path, header=0)
-            self.update_old(df, df_existing, database_path)
+            print('Updating Database...')
+            #df_existing = pd.read_excel(database_path, header=0)
+            #self.update_old(df, df_old database_path)
+            self.update_database(df, self.table_name_database, database_path)
         return 0
+
+
+    def update_database(self, df, table_name_database, database_path):
+        connection = sqlite3.connect(database_path)
+
+        cursor = connection.cursor()
+        
+        # get all tables from Database
+        cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name_database}';")
+        table_exists = cursor.fetchone()
+
+        # check if table exists then update if not generate error
+        if table_exists[0] == self.table_name_database:
+            for index, row in df.iterrows():
+                cursor.execute(f"""
+                               UPDATE {table_name_database}
+                               SET
+                               "ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ" = ?,
+                               "ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ" = ?,
+                               "ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ" = ?,
+                               "ΩΡΑ ΕΝΑΡΞΗΣ" = ?,
+                               "ΚΑΜΕΝΗ ΕΚΤΑΣΗ" = ?
+                               WHERE "Α/Α" = ?;
+                               """,(
+                               row['ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ'],
+                               row['ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'],
+                               row['ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'],
+                               row['ΩΡΑ ΕΝΑΡΞΗΣ'],
+                               row['ΚΑΜΕΝΗ ΕΚΤΑΣΗ'],
+                               row['Α/Α']))
+
+                if cursor.rowcount == 0:
+                    cursor.execute(f"""
+                                  INSERT INTO {table_name_database} (
+                                  "Α/Α", 
+                                  "ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ",
+                                  "ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ",
+                                  "ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ",
+                                  "ΩΡΑ ΕΝΑΡΞΗΣ",
+                                  "ΚΑΜΕΝΗ ΕΚΤΑΣΗ"
+                                  )
+                                  VALUES (?, ?, ?, ?, ?, ?);
+                                  """,(
+                                  row['Α/Α'],
+                                  row['ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ'],
+                                  row['ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'],
+                                  row['ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'],
+                                  row['ΩΡΑ ΕΝΑΡΞΗΣ'],
+                                  row['ΚΑΜΕΝΗ ΕΚΤΑΣΗ']
+                                     ))
+        else:
+            print('Table not Found in Database, Check File Path!')
+            exit(22)
+
+        connection.commit()
+        connection.close()
+
+        return 0      
+
+
+
+
+
+
 
     def update_old(self, df_new, df_old, database_path):
         try:
@@ -212,7 +291,9 @@ class DeltiaFire:
 
 
 
-    def save_to_excel(self, tables, excel_path):
+    def save_to_excel(self, excel_path):        
+        # ftiaxoume ta tables
+        tables = self.tables
 
         merged_tables = pd.concat(tables, ignore_index=True)
         merged_tables = self.fix_names(merged_tables)
@@ -292,7 +373,11 @@ class DeltiaFire:
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = chunk4
 
         # dimourgoume neo arxeio excel an den uparxei idi gia to database
-        print('Dimiourgia neou Excel,', excel_path)
-        df.to_excel(excel_path, header=True, index=False)
+        if not os.path.exists(excel_path):
+            os.makedirs(excel_path)
+
+        excel_path_name = excel_path + os.path.basename(self.pdf_path).replace('.pdf', '').replace('pdf_Data/', '') + '.xlsx'
+        print('Dimiourgia neou Excel,', excel_path_name)
+        df.to_excel(excel_path_name, header=True, index=False)
 
         return 0
