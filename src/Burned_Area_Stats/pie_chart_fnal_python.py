@@ -8,17 +8,21 @@ import os
 from matplotlib.gridspec import GridSpec
 import json
 
+
 class PlotCLC:
-    def __init__(self, CorineLandCover_PATH):
+    def __init__(self, CorineLandCover_PATH, CorineLandCover_JSON_PATH):
         self.file_path = CorineLandCover_PATH  # Αλλάξτε τη διαδρομή στο αρχείο σας
 
 
-        with open('CLC_number_to_legend_color.json', 'r') as fp:
+        with open(CorineLandCover_JSON_PATH, 'r') as fp:
             self.CLC_number_to_legend_color = json.load(fp)
-            print(self.CLC_number_to_legend_color)
 
         # make the CorinaLandCover Plot
         self.MakePlot(self.file_path, self.CLC_number_to_legend_color)
+
+
+
+
 
     def MakePlot(self, file_path, dictionary):
         # Λεξικό με τις κατηγορίες του Corine Land Cover
@@ -33,9 +37,8 @@ class PlotCLC:
 
         #self.pie_chart(percentage, colors, labels, os.path.basename(file_path).replace(".csv", ".png"))
         #self.create_legend(labels, colors)
-        self.combined_pie_and_legend(percentage, colors, labels, removed_labels, os.path.basename(file_path).replace(".csv", ".png"))
+        self.combined_pie_and_legend(percentage, colors, labels, removed_labels, file_path)
 
-        self.pie_chart(percentage, colors, labels, os.path.basename(file_path).replace(".csv", "_pie.png"))
 
     # Συνάρτηση get_color_and_category
     # Εισάγωντας τον κωδικό μιας κατηγορίας του CLC επιστρέφει το χρώμα της και το ονομά της
@@ -135,11 +138,6 @@ class PlotCLC:
 
         return code, percentage, colors, labels, removed_labels
 
-
-
-    # Συνάρτηση δημιούργιας διαγράμματος πίτας
-
-
     # Συνάρτηση διαγράμματος πίτας
     def pie_chart(self, percentage_d, colors_d, labels_d, path_file):
         plt.figure(figsize=(12, 12))
@@ -176,7 +174,7 @@ class PlotCLC:
         plt.show()
 
     def combined_pie_and_legend(self, percentage_d, colors_d, labels_d, removed_labels, path_file):
-        fig = plt.figure(figsize=(10, 10))  # Adjusted to give more width for the legend
+        fig = plt.figure(figsize=(15, 6))  # Adjusted to give more width for the legend
         gs = GridSpec(1, 2, width_ratios=[2, 0.5])  # 1 row, 2 columns; first column 2 times wider than the second
 
         # Pie chart
@@ -239,10 +237,10 @@ class PlotCLC:
             fontsize=20,
             fontweight='bold',
             family='sans-serif',
-            y=0.95  # Adjust this value to move the title up or down
+            y=0.95,  # Adjust this value to move the title up or down
         )
         # Save the figure
-        #print(path_file)
-        plt.savefig(path_file + 'pie_chart', format='png', bbox_inches='tight')
+        file_name = os.path.basename(self.file_path).replace(".csv", "")
+        plt.savefig(path_file + file_name + '_pie_chart.png', format='png', dpi=300, bbox_inches='tight')
         plt.show()
 

@@ -14,18 +14,16 @@ class BAStats:
         self.AOI    = BurnedArea_GeoDataFrame
         self.areaOfCatagorys = gp.GeoDataFrame() # final results, just initiate the Series
 
-    # test test test branch
+    
     def check_crs(self):
         if self.geo_df.crs != self.AOI.crs:
             print('CRS of Shapefile:  ', self.geo_df.crs)
             print('CRS of Burned Area:', self.AOI.crs)
             print('CRS will be changed to', self.AOI.crs, '\n')
-
-            self.AOI.crs = 'epsg:32634'
+            # change CRS of shapefile to much 
             self.geo_df = self.geo_df.to_crs(self.AOI.crs)
         else:
             print('CRS of Shapefile and Burned Area:', self.geo_df.crs, '\n')
-            #self.geo_df = self.geo_df.to_crs(self.AOI.crs)
 
 
     def fix_geometry(self, geometry):
@@ -137,7 +135,7 @@ class BAStats:
                                        header=False,
                                        index=True,
                                        sep=',',
-                                        encoding='utf-8-sig')
+                                       encoding='utf-8-sig')
 
     def save_polygon(self, output_path, filename):
         # do not save if there is nothing to save in the geodataframe
@@ -153,6 +151,7 @@ class BAStats:
 
     def calc_stats(self, column):
 
+        # clip shapefile to AOI
         self.clip_area_to_AOI()
 
         # dissolves burned area (AOI) if needed
@@ -169,6 +168,7 @@ class BAStats:
                 print('None!\n')
                 print('--------------------')
             return categorys
+        
         # shapefile contains polygon
         else:
 
