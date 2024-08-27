@@ -17,7 +17,7 @@ class KMLManager:
         os.makedirs(self.s2b_directory, exist_ok=True)
 
         # Set up logging
-        logging.basicConfig(filename='kml_manager.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+        #logging.basicConfig(filename='kml_manager.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
     def download_kml(self):
         KML_url = 'https://sentinel.esa.int/web/sentinel/copernicus/sentinel-2/acquisition-plans'
