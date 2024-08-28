@@ -1,0 +1,101 @@
+{
+    "shapefiles": {
+        "path1": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/penteli/final_burned_varnavas.shp",
+        "epsg1": "EPSG:32634",
+        "path2": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/greece-latest-free-shp/gis_osm_places_free_1.shp",
+        "epsg2": "EPSG:4326",
+        "path3": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/BSM_2009_Attiki/BSM_2009_Attiki.shp",
+        "epsg3": "EPSG:4326"
+    },
+    "dates": {
+        "detect": "11/08/2024 15:15",
+        "raw": "07/08/2024 και 13/08/2024",
+        "map": "14/08/2024"
+    },
+    "area": "9956",
+    "product": "Επεξεργασμένες Δορυφορικές Εικόνες PlanetScope πολύ υψηλής χωρικής\nανάλυσης (3m)",
+    "logos": {
+        "north": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/north.png",
+        "x_north": 1.97,
+        "y_north": 0.38,
+        "first": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/AsteroskopoioLogoOuranidon.jpg",
+        "second": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/IAADET.png",
+        "third": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/BEYOND_LOGO.png",
+        "fourth": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/logos/eratosthenes.png",
+        "x": 0.1,
+        "y": 1.05
+    },
+    "image_paths": {
+        "burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/temp/map_burned.png",
+        "cropped_burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/cartography_map_burned_cropped.png"
+    },
+    "firehub": {
+        "name": "FireHub",
+        "x": 1.7,
+        "y": 1.06
+    },
+    "ypomnima": {
+        "name": "Υπόμνημα",
+        "y": 0.42,
+        "id_name1": "id",
+        "label1": "Καμένη έκταση 2024, 9956 ha",
+        "id_name2": "osm_id",
+        "label2": "Οικισμοί",
+        "id_name3": "id",
+        "label3": "Καμένη έκταση 2009, 13043 ha",
+        "xlabel": 0.65,
+        "ylabel": -0.3
+    },
+    "place": {
+        "name": "Βορειοανατολική Αττική",
+        "y": 0.98
+    },
+    "subtitle": {
+        "name": "Εκτίμηση των καμένων εκτάσεων\nτης πυρκαγιάς στις 11/08/2024",
+        "y": 0.97
+    },
+    "production_date": {
+        "name": "Ημερομηνία Παραγωγής: ",
+        "x": 1.37,
+        "y": 0.925
+    },
+    "map_information": {
+        "name": "Πληροφορίες Χάρτη",
+        "y_name": 0.31,
+        "text": "Ο χάρτης έχει δημιουργηθεί από την Επιχειρησιακή Μονάδα BEYOND του\nΙΑΑΔΕΤ/ΕΑΑ. O σκοπός του προϊόντος αυτού είναι να δώσει μια εκτίμηση\nτης επιφάνειας των καμένων εκτάσεων της πυρκαγιάς στη\nΒορειοανατολική Αττική, που ανιχνεύθηκε στις 11/08/2024 15:15\nαπό την υπηρεσία ανίχνευσης και παρακολούθησης πυρκαγιών FireHub\n(http://beyond-eocenter.eu/index.php/web-services/firehub) της\nΕπιχειρησιακής Μονάδας BEYOND (http://beyond-eocenter.eu/) του\nΙΑΑΔΕΤ/ΕΑΑ (www.noa.gr).\nΗ εκτίμηση της καμένης έκτασης, η οποία βασίστηκε σε δορυφορικά\nδεδομένα πολύ υψηλής ανάλυσης, υπολογίστηκε 9956 ha.",
+        "y_text": 0.232
+    },
+    "sources": {
+        "name": "Πηγές Δεδομένων",
+        "y_name": 0.15,
+        "text": "Επεξεργασμένες Δορυφορικές Εικόνες PlanetScope πολύ υψηλής χωρικής\nανάλυσης (3m),με ημερομηνίες λήψης 07/08/2024 και 13/08/2024,\nπροσφορά του Κεντρου Αριστείας Eratosthenes\n",
+        "y_text": 0.115
+    },
+    "publication": {
+        "name": "Δημοσίευση",
+        "y_name": 0.11,
+        "text": "Το προϊόν διατίθεται μέσω της ιστοσελίδας του BEYOND στην ακόλουθη\nδιεύθυνση URL: http://beyond-eocenter.eu/index.php/fires",
+        "y_text": 0.085
+    },
+    "contact_details": {
+        "name": "Στοιχεία Επικοινωνίας",
+        "y_name": 0.085,
+        "text": "Δρ. Χάρης Κοντοές, Διευθυντής Ερευνών ΕΑΑ\nE-mail: kontoes@noa.gr",
+        "y_text": 0.063
+    },
+    "text_position": {
+        "x": 1.029,
+        "y": 0.26
+    },
+    "map": {
+        "expansion_factor": 0.1,
+        "expansion_factor2": 5,
+        "ysize": 6,
+        "x": 0.645,
+        "y": 0.55,
+        "width": 0.4,
+        "height": 0.5
+    },
+    "crop_factor": 430
+
+}
