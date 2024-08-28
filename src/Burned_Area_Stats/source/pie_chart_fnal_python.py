@@ -14,7 +14,7 @@ class PlotCLC:
         self.file_path = CorineLandCover_PATH  # Αλλάξτε τη διαδρομή στο αρχείο σας
 
 
-        with open(CorineLandCover_JSON_PATH, 'r') as fp:
+        with open(CorineLandCover_JSON_PATH, 'r', encoding='utf-8') as fp:
             self.CLC_number_to_legend_color = json.load(fp)
 
         # make the CorinaLandCover Plot
@@ -47,8 +47,8 @@ class PlotCLC:
     def get_color_and_category(self, code, dictionary):
         code = str(code)
         if code in dictionary:
-            color, category = dictionary[code]
-            return color, category
+            color, category_eng, category_gr = dictionary[code]
+            return color, category_eng, category_gr
         else:
             return None, "Μη έγκυρος αριθμός"
 
@@ -121,14 +121,16 @@ class PlotCLC:
 
         # Λήψη χρωμάτων και ετικετών για κάθε κωδικό
         for number in code:
-            color, description = self.get_color_and_category(number, dictionary)
+            color, description_eng, description_gr = self.get_color_and_category(number, dictionary)
+            description = description_eng
             if color and description:
                 labels.append(description)
                 colors.append(color)
 
         # Λήψη ετικετών για κάθε κωδικό που αφαιρέθηκε
         for number in removed_codes:
-            color, description = self.get_color_and_category(number, dictionary)
+            color, description_eng, description_gr = self.get_color_and_category(number, dictionary)
+            description = description_eng
             if color and description:
                 removed_labels.append(description + '\n')
 
