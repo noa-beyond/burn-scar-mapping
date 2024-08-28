@@ -1,16 +1,39 @@
 import logging
+import json
+import os
 from datetime import datetime
 from test_kml_manager_class import KMLManager
 
-# Define your directories in the main script
-base_directory = 'burn-scar-mapping/notebooks/KML_acquisition_plans/update'
-s2a_directory = 'burn-scar-mapping/notebooks/KML_acquisition_plans/S2A'
-s2b_directory = 'burn-scar-mapping/notebooks/KML_acquisition_plans/S2B'
+# Path to the configuration file
+config_file_path = 'burn-scar-mapping/notebooks/KML_acquisition_plans/config_directories.json'
 
-def job():
+def job(config_file_path):
     logging.info("Running scheduled task...")
-    # Pass the directories when creating the KMLManager object
-    kml_manager = KMLManager(base_directory, s2a_directory, s2b_directory)
+
+    # Check if the config file exists
+    if os.path.exists(config_file_path):
+        try:
+            with open(config_file_path, 'r') as config_file:
+                config = json.load(config_file)
+                
+            # Retrieve directories from the config file
+            base_directory = config.get("base_directory")
+            s2a_directory = config.get("s2a_directory")
+            s2b_directory = config.get("s2b_directory")
+            logging.info(f'Config found. Using directories: base={base_directory}, S2A={s2a_directory}, S2B={s2b_directory}')
+
+            # Create KMLManager with directories from config
+            kml_manager = KMLManager(base_directory, s2a_directory, s2b_directory)
+        except Exception as e:
+            logging.error(f'Failed to read config file: {e}')
+            # Fallback to default initialization if there's an error
+            kml_manager = KMLManager() # Use default directories
+    else:
+        logging.warning(f'Config file {config_file_path} not found. Using default directories.')
+        # Fallback to default initialization if config doesn't exist
+        kml_manager = KMLManager() # Use default directories
+
+    # Download the KML files and update the local dataset
     try:
         kml_manager.download_kml()
         kml_manager.update_local_dataset()
@@ -31,6 +54,7 @@ if __name__ == "__main__":
     )
     
     logging.info("Starting the scheduled task...")
-    
+
     # Run the job
-    job()
+    job(config_file_path)
+

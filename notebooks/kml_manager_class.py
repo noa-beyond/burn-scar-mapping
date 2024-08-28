@@ -6,7 +6,7 @@ from urllib.request import urlretrieve
 import logging
 
 class KMLManager:
-    def __init__(self, base_directory='KML_acq/update', s2a_directory='KML_acq/S2A', s2b_directory='KML_acq/S2B'):
+    def __init__(self, base_directory='KML_acquisition_plans/update', s2a_directory='KML_acquisition_plans/S2A', s2b_directory='KML_acquisition_plans/S2B'):
         self.base_directory = base_directory
         self.s2a_directory = s2a_directory
         self.s2b_directory = s2b_directory
@@ -75,7 +75,7 @@ class KMLManager:
             
             if file_name.endswith('.kml'):
                 source_path = os.path.join(self.base_directory, file_name)
-                
+
                 # Check the file name to determine the appropriate directory
                 if 's2a' in file_name:
                     destination_path = os.path.join(self.s2a_directory, file_name)

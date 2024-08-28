@@ -6,7 +6,18 @@ from urllib.request import urlretrieve
 import logging
 
 class KMLManager:
-    def __init__(self, base_directory, s2a_directory, s2b_directory):
+    '''
+        Downloads and sorts kml files for Sentinel 2 passes
+        input: directories
+        output: None
+    '''
+    def __init__(
+            self, 
+            base_directory: str = 'update', 
+            s2a_directory: str = 'S2A', 
+            s2b_directory: str = 'S2B',
+            ):
+        
         self.base_directory = base_directory
         self.s2a_directory = s2a_directory
         self.s2b_directory = s2b_directory
