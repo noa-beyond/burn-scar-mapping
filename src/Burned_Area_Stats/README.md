@@ -26,9 +26,9 @@ if unknown put 'None' in the config (not recomented) <br />
 **1.** Put all shapefile(s) paths into **configs/config.yaml**, example --> << shapefile_name_PATH >>
 **2.** Edit **main.py**, add : <br />
 - Add new GeoDataFrame <br />
-```new_shapefile_GeoDataFrame = gp.read_file(config['new_shapefile_PATH'])``` <br /><br />
+```new_shapefile_GeoDataFrame = gp.read_file(shapefile_path)``` <br /><br />
 - Initiate new Object BAStats<br />
-``` stats_new_shapefile = BAStats(new_shapefile_GeoDataFrame, BurnedArea)``` <br /><br />
+``` stats_new_shapefile = BAStats(new_shapefile_GeoDataFrame, BurnedArea_shapefile_GeoDataFrame)``` <br /><br />
 - Make use of calc_stats(), save_csv() and save_polygon() from BAStats class <br />
 ```stats_new_shapefile.calc_stats(column='column')```, column is used for dissolve if unknown put 'None' (not recomented)
 ```stats_new_shapefile.save_csv(output_path, output_name)```, save .csv file containg all calculated stats
