@@ -27,7 +27,7 @@ if unknown put 'None' in the config (not recomented) <br />
 **2.** Edit **main.py**, add : <br />
 - Add new GeoDataFrame <br />
 ```new_shapefile_GeoDataFrame = gp.read_file(config['new_shapefile_PATH'])``` <br /><br />
-- Initiate new Object BAS<br />
+- Initiate new Object BAStats<br />
 ``` stats_new_shapefile = BAStats(new_shapefile_GeoDataFrame, BurnedArea)``` <br /><br />
 - Make use of calc_stats(), save_csv() and save_polygon() from BAStats class <br />
 ```stats_new_shapefile.calc_stats(column='column')```, column is used for dissolve if unknown put 'None' (not recomented)
