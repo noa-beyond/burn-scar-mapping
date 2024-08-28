@@ -1,227 +1,227 @@
 {
     "111": [
         "#e6004d",
-        "Continuous urban fabric"
+        "Continuous urban fabric",
         "Συνεχής αστικός ιστός"
     ],
     "112": [
         "#ff0000",
-        "Discontinuous urban fabric"
+        "Discontinuous urban fabric",
         "Ασυνεχής αστικός ιστός"
     ],
     "121": [
         "#cc4df2",
-        "Industrial or commercial units"
+        "Industrial or commercial units",
         "Βιομηχανικές και εμπορικές μονάδες"
     ],
     "122": [
         "#cc0000",
-        "Road and rail networks and associated land"
+        "Road and rail networks and associated land",
         "Οδικά και σιδηροδρομικά δίκτυα"
     ],
     "123": [
         "#e6004d",
-        "Port areas"
+        "Port areas",
         "Ζώνες λιμανιών"
     ],
     "124": [
         "#e6cce6",
-        "Airports"
+        "Airports",
         "Αεροδρόμια"
     ],
     "131": [
         "#a600cc",
-        "Mineral extraction sites"
+        "Mineral extraction sites",
         "Χώροι εξορύξεως ορυκτών"
     ],
     "132": [
         "#a64d00",
-        "Dump sites"
+        "Dump sites",
         "Χώροι απορρίψεως απορριμμάτων"
     ],
     "133": [
         "#ff4dff",
-        "Construction sites"
+        "Construction sites",
         "Χώροι οικοδομής"
     ],
     "141": [
         "#ffa6ff",
-        "Green urban areas"
+        "Green urban areas",
         "Περιοχές αστικού πρασίνου"
     ],
     "142": [
         "#ffe6ff",
-        "Sport and leisure facilities"
+        "Sport and leisure facilities",
         "Εγκαταστάσεις αθλητισμού και αναψυχής"
     ],
     "211": [
         "#ffffa8",
-        "Non-irrigated arable land"
+        "Non-irrigated arable land",
         "Μη αρδευόμενη αρόσιμη γη"
     ],
     "212": [
         "#ffff00",
-        "Permanently irrigated land"
+        "Permanently irrigated land",
         "Μόνιμα αρδευόμενη γη"
     ],
     "213": [
         "#e6e600",
-        "Rice fields"
+        "Rice fields",
         "Ορυζώνες"
     ],
     "221": [
         "#e68000",
-        "Vineyards"
+        "Vineyards",
         "Αμπελώνες"
     ],
     "222": [
         "#f2a64d",
-        "Fruit trees and berry plantations"
+        "Fruit trees and berry plantations",
         "Οπωροφόρα δέντρα και φυτείες με σαρκώδεις καρπούς"
     ],
     "223": [
         "#e6a600",
-        "Olive groves"
+        "Olive groves",
         "Ελαιώνες"
     ],
     "231": [
         "#e6e64d",
-        "Pastures"
+        "Pastures",
         "Λιβάδια"
     ],
     "241": [
         "#ffe6a6",
-        "Annual crops associated with permanent crops"
+        "Annual crops associated with permanent crops",
         "Ετήσιες καλλιέργειες που σχετίζονται με μόνιμες καλλιέργειες"
     ],
     "242": [
         "#ffe64d",
-        "Complex cultivation patterns"
+        "Complex cultivation patterns",
         "Σύνθετες καλλιέργειες"
     ],
     "243": [
         "#e6cc4d",
-        "Land principally occupied by agriculture,\n with significant areas of natural vegetation"
+        "Land principally occupied by agriculture,\n with significant areas of natural vegetation",
         "Γη που χρησιμοποιείται κύριως για γεωργία,\n μαζί με σημαντικά τμήματα φυσικής βλάστησης"
     ],
     "244": [
         "#e6cc4d",
-        "Agro-forestry areas"
+        "Agro-forestry areas",
         "Γεωργο-δασικές περιοχές"
     ],
     "311": [
         "#80ff00",
-        "Broad-leaved forest"
+        "Broad-leaved forest",
         "Δάσος πλατύφυλλων"
     ],
     "312": [
         "#00a600",
-        "Coniferous forest"
+        "Coniferous forest",
         "Δάσος κωνοφόρων"
     ],
     "313": [
         "#4dff00",
-        "Mixed forest"
+        "Mixed forest",
         "Μικτό δάσος"
     ],
     "321": [
         "#ccf24d",
-        "Natural grasslands"
+        "Natural grasslands",
         "Φυσικοί βοσκοτόποι"
     ],
     "322": [
         "#a6ff80",
-        "Moors and heathland"
+        "Moors and heathland",
         "Θάμνοι και χερσότοποι"
     ],
     "323": [
         "#a6e64d",
-        "Sclerophyllous vegetation"
+        "Sclerophyllous vegetation",
         "Σκληροφυλλική βλάστηση"
     ],
     "324": [
         "#a6f200",
-        "Transitional woodland-shrub"
+        "Transitional woodland-shrub",
         "Μεταβατικές δασώδεις και θαμνόδεις εκτάσεις"
     ],
     "331": [
         "#e6e6e6",
-        "Beaches, dunes, sands"
+        "Beaches, dunes, sands",
         "Παραλίες, αμμόλοφοι, αμμουδιές"
     ],
     "332": [
         "#cccccc",
-        "Bare rocks"
+        "Bare rocks",
         "Απογυμνωμένοι βράχοι"
     ],
     "333": [
         "#ccffcc",
-        "Sparsely vegetated areas"
+        "Sparsely vegetated areas",
         "Εκτάσεις με αραιή βλάστηση"
     ],
     "334": [
         "#000000",
-        "Burnt areas"
+        "Burnt areas",
         "Αποτεφρωμένες εκτάσεις"
     ],
     "335": [
         "#a6e6cc",
-        "Glaciers and perpetual snow"
+        "Glaciers and perpetual snow",
         "Παγετώνες και αέναο χιόνι"
     ],
     "411": [
         "#a6a6ff",
-        "Inland marshes"
+        "Inland marshes",
         "Βάλτοι στην ενδοχώρα"
     ],
     "412": [
         "#4d4dff",
-        "Peat bogs"
+        "Peat bogs",
         "Τυρφώνες"
     ],
     "421": [
         "#ccccff",
-        "Salt marshes"
+        "Salt marshes",
         "Παραθαλάσσιοι βάλτοι"
     ],
     "422": [
         "#e6e6ff",
-        "Salines"
+        "Salines",
         "Αλυκές"
     ],
     "423": [
         "#a6a6e6",
-        "Intertidal flats"
+        "Intertidal flats",
         "Ζώνες που καλύπτονται από την παλιρροιακά ύδατα"
     ],
     "511": [
         "#00ccf2",
-        "Water courses"
+        "Water courses",
         "Υδατορρεύματα"
     ],
     "512": [
         "#80f2e6",
-        "Water bodies"
+        "Water bodies",
         "Επιφάνειες στάσιμου ύδατος"
     ],
     "521": [
         "#00ffa6",
-        "Coastal lagoons"
+        "Coastal lagoons",
         "Παράκτιες λιμνοθάλασσες"
     ],
     "522": [
         "#00ffa6",
-        "Estuaries"
+        "Estuaries",
         "Εκβολές ποταμών"
     ],
     "523": [
         "#e6f2ff",
-        "Sea and ocean"
+        "Sea and ocean",
         "Θάλασσα και ωκεανοί"
     ],
     "0": [
         "#a4a4a6",
-        "Other"
+        "Other",
         "Άλλο"
     ]
 }
