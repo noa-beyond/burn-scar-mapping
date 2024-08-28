@@ -1,9 +1,12 @@
 # Burned Area Statistics
 
 ## Features
+- Calculate Stats from a given Burned Area in multiple Shapefiles
+- Export results in .csv format
+- Export clipped shapefiles (inside burned area)
+- Genarate Pie Chart for Corine Land Cover
+- Calculate stats for mutiple burned areas in one go
 
-- Import a HTML file and watch it magically convert to Markdown
-- Drag and drop images (requires your Dropbox account be linked)
-- Import and save files from GitHub, Dropbox, Google Drive and One Drive
-- Drag and drop markdown and HTML files into Dillinger
-- Export documents as Markdown, HTML and PDF
+## How to Use
+**1.** Put all shapefiles from Burned Areas inside a folder and specify the path into <br />
+**configs/config.yaml
