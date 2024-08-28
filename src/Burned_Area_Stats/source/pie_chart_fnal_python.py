@@ -224,16 +224,16 @@ class PlotCLC:
             handles=patches,
             loc='lower right',
             fontsize=12,
-            title="Κατηγορίες Χρήσης Γης",
+            title="Land Use",
             shadow=False
         )
 
-        legend.set_title("Κατηγορίες Χρήσης Γης", prop={'size': '14', 'weight': 'bold'})
+        legend.set_title("Land Use", prop={'size': '14', 'weight': 'bold'})
         ax2.axis('off')  # Turn off the axis
 
         # Set the title for the whole figure
         fig.suptitle(
-            "Καμμένες εκτάσεις - Χρήσεις γης Corine Land Cover 2018",
+            "Burned Areas - Corine Land Cover 2018",
             fontsize=20,
             fontweight='bold',
             family='sans-serif',
