@@ -80,3 +80,18 @@ if __name__ == "__main__":
             print('\n')
     print('Done!')
 ```
+
+## Screenshots
+- PDF Fire Reports Example
+![Alt text](https://github.com/noa-beyond/burn-scar-mapping/blob/nikos/src/deltia_pyrosvstikis/screenshots/fire_pdf.png) <br />
+
+- Excel Output Example
+![Alt text](https://github.com/noa-beyond/burn-scar-mapping/blob/nikos/src/deltia_pyrosvstikis/screenshots/fire_excel.png) <br />
+
+- Genarated Database Table/Columns
+![Alt text](https://github.com/noa-beyond/burn-scar-mapping/blob/nikos/src/deltia_pyrosvstikis/screenshots/fire_database.png) <br />
+
+ - Genarated Database Entrys
+![Alt text](https://github.com/noa-beyond/burn-scar-mapping/blob/nikos/src/deltia_pyrosvstikis/screenshots/fire_database_2.png)
+
+
