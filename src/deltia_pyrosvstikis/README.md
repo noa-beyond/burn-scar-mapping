@@ -1,4 +1,4 @@
-# Fire Reports PDFs to Databse
+# Fire Reports PDFs to Database
 
 
 ## Features
@@ -25,12 +25,12 @@ tabula==1.0.5, tabula_py==2.9.3, Java install locally
 **3.** Put Excel Output path into **config_multipleFiles.yaml** in "Excel_Files_Output_PATH" <br />
 **4.** Run **main_multipleFiles.py**
 
-#### Output
-##### Single Fire Report
+### Output
+#### Single Fire Report
 - Single Excel File with info from the Fire Report
 
-##### Multiple Fire Reports
-- Database containing all info from Fire Reports
+#### Multiple Fire Reports
+- Database containing info from Fire Reports
 - Folder containing unique Excel files from every Fire Report (can be disabled)
 
 ## How to Use (Alternative)
