@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # load output folder path and check if it exist, otherwise create it
     output_path      = config['OutputFolder_PATH']
 
-    # create outpurt folder if not exist and set output path to folder named as the burned area shapefile
+    # create outpurt folder if not exist
     if not os.path.exists(output_path):
         os.mkdir(output_path)
 
@@ -62,7 +62,6 @@ if __name__ == "__main__":
         stats_NATURA     = BAStats(NATURA_GeoDataFrame, BurnedArea)
         stats_OIKISMOI   = BAStats(Oikismoi_GeoDataFrame, BurnedArea)
         stats_Periferies = BAStats(Periferies_GeoDataFrame, BurnedArea)
-        #stats_falakro    = BAStats(falakaro, BurnedArea)
 
 
         # Periferies Stats
