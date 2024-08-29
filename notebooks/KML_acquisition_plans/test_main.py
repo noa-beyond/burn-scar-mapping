@@ -35,6 +35,7 @@ def job(config_file_path):
 
     # Download the KML files and update the local dataset
     try:
+        kml_manager.delete_kml_in_UpdateFile()
         kml_manager.download_kml()
         kml_manager.update_local_dataset()
     except Exception as e:
@@ -43,7 +44,7 @@ def job(config_file_path):
 if __name__ == "__main__":
     # Generate a timestamped log file name
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    log_filename = f'burn-scar-mapping/notebooks/KML_acquisition_plans/test_kml_main{timestamp}.log'
+    log_filename = f'burn-scar-mapping/notebooks/KML_acquisition_plans/log_archive/test_kml_main{timestamp}.log'
     
     # Set up logging to append to the existing log file instead of overwriting it
     logging.basicConfig(
@@ -57,4 +58,3 @@ if __name__ == "__main__":
 
     # Run the job
     job(config_file_path)
-

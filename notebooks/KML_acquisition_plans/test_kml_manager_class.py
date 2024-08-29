@@ -30,6 +30,20 @@ class KMLManager:
         # Set up logging
         #logging.basicConfig(filename='kml_manager.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+    def delete_kml_in_UpdateFile(self):
+
+        # Delete existing .kml files in the destination directory
+        for existing_file in os.listdir(self.base_directory):
+
+            if existing_file.endswith('.kml'):
+                existing_file_path = os.path.join(self.base_directory, existing_file)
+                
+                try:
+                    os.remove(existing_file_path)
+                    logging.info(f'Deleted existing file: {existing_file_path}')
+                except Exception as e:
+                    logging.error(f'Failed to delete file {existing_file_path}: {e}')
+
     def download_kml(self):
         KML_url = 'https://sentinel.esa.int/web/sentinel/copernicus/sentinel-2/acquisition-plans'
         base_url = 'https://sentinel.esa.int/'
@@ -96,11 +110,12 @@ class KMLManager:
                     logging.warning(f'Unexpected file name: {file_name}')
                     continue
 
-                # Move the file to the determined directory
+                # Copy the file to the determined directory
                 try:
-                    shutil.move(source_path, destination_path)
-                    logging.info(f'Successfully moved {file_name} to {destination_path}')
+                    shutil.copy(source_path, destination_path)
+                    logging.info(f'Successfully copied {file_name} to {destination_path}')
                 except Exception as e:
-                    logging.error(f'Failed to move {file_name} from {source_path} to {destination_path}: {e}')
+                    logging.error(f'Failed to copy {file_name} from {source_path} to {destination_path}: {e}')
+
             else:
                 logging.warning(f'Skipped non-KML file: {file_name}')

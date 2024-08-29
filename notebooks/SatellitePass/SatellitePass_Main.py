@@ -1,4 +1,5 @@
 import json
+import os
 from SatellitePassPrediction_class import SatellitePassPrediction
 
 """
@@ -12,24 +13,50 @@ config_file_path = 'burn-scar-mapping/notebooks/SatellitePass/config_SatellitePa
 with open(config_file_path, 'r') as config_file:
                 config = json.load(config_file)
 
-kml_filename = config.get("kml_filename")
+# Extract latitude and longitude from the config
 latitude = config.get("latitude")
 longitude = config.get("longitude")
+base_kml_directory = config.get("base_kml_directory")
+'''
+for existing_file in os.listdir(base_kml_directory):
 
+    if existing_file.endswith('.kml'):
+        existing_kml_file_path = os.path.join(base_kml_directory, existing_file)
+        # List of KML filenames to process
+        kml_filenames = [existing_kml_file_path]
 
-# Initialize the SatellitePassPrediction object
-satellite_pass = SatellitePassPrediction(kml_filename, latitude, longitude)
+print("print kml_filenames", kml_filenames)
+print("len(kml_filenames)", len(kml_filenames))
+'''
+# Initialize an empty list to store the KML file paths
+kml_filenames = []
 
-# Extract placemarks and generate GeoDataFrame
-satellite_pass.extract_placemarks_to_gdf()
+# Get a list of KML files
+for f in os.listdir(base_kml_directory) :
+    if f.endswith('.kml'):
+        kml_file_path = os.path.join(base_kml_directory, f)
+        kml_filenames.append(kml_file_path)
 
-# Get observation info for the specified point
-observation_info = satellite_pass.get_observation_info()
+print("\nkml list :", kml_filenames)
+print("Number of KML files:", len(kml_filenames))
 
-if observation_info:
-    print("There are", len(observation_info), "polygons containing the point.")
-    print("Observation info for the point:")
-    for i, info in enumerate(observation_info, 1):
-        print(f"{i}. {info}")
-else:
-    print("The point is not within any of the polygons.")
+# Loop through each KML file and process it
+for i, kml_filename in enumerate(kml_filenames):
+    # Initialize the SatellitePassPrediction object
+    satellite_pass = SatellitePassPrediction(kml_filename, latitude, longitude)
+
+    # Extract placemarks and generate GeoDataFrame
+    satellite_pass.extract_placemarks_to_gdf()
+
+    # Get observation info for the specified point
+    observation_info = satellite_pass.get_observation_info()
+
+    if observation_info:
+        print("\n------------------------------------------------------------------------------------------------------------")
+        print(f"Processing file {i+1}/{len(kml_filenames)}: {kml_filename}")
+        print("There are", len(observation_info), "polygons containing the point.")
+        print("Observation info for the point:")
+        for j, info in enumerate(observation_info, 1):
+            print(f"{j}. {info}")
+    else:
+        print("The point is not within any of the polygons.")
