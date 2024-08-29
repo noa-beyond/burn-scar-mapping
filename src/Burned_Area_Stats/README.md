@@ -22,7 +22,7 @@ if unknown put 'None' in the config (not recomented) <br />
 **5.** Run **main_fullyauto.py** <br />
 - The above steps will genarate stats for the Burned Area(s) from the shapefiles specified in config.yaml
 
-## How to Use (Manual Verion)
+## How to Use (Manual Version)
 **1.** Put all shapefile(s) paths into **configs/config.yaml**, example --> << shapefile_name_PATH >>
 **2.** Edit **main.py**, add : <br />
 - Add new GeoDataFrame <br />
