@@ -1,7 +1,7 @@
 # Burned Area Statistics
 
 ## Features
-- Calculate Stats from a given Burned Area Shapefile(s)
+- Calculate Stats for a given Burned Area Shapefile(s)
 - Export results in .csv format
 - Export clipped shapefiles (inside burned area)
 - Genarate Pie Chart for Corine Land Cover
