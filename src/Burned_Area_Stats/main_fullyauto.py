@@ -92,6 +92,6 @@ if __name__ == "__main__":
             # save clipped polygon
             object.save_polygon(output_path, shapefile_name)
 
-    # plot corive land cover pie stats and save png of plot
+    # plot corine land cover pie stats and save png of plot
     clc_stats_path = output_path + os.path.basename(config['CorineLandCover_PATH']).replace('.shp', '') + '_' + burned_area_polygon_name + '_STATS.csv'
     PlotCLC(clc_stats_path, config['CorineLandCover_JSON_PATH'])

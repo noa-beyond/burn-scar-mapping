@@ -105,5 +105,5 @@ if __name__ == "__main__":
         stats_OIKISMOI.save_csv(output_path, 'OIKISMOI_STATS_' + burned_area_polygon_name)
         stats_OIKISMOI.save_polygon(output_path, str(os.path.splitext(os.path.basename(config['Oikismoi_PATH']))[0]))
 
-        # plot corive land cover pie stats and save png of plot
+        # plot corine land cover pie stats and save png of plot
         PlotCLC(output_path + 'CLC_stats_' + burned_area_polygon_name + '.csv', config['CorineLandCover_JSON_PATH'])

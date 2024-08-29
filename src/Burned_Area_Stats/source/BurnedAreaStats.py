@@ -171,7 +171,6 @@ class BAStats:
         
         # shapefile contains polygon
         else:
-
             # dissolve shapefile for the column that stats will be calculated
             self.dissolve_shapefile(column)
 
