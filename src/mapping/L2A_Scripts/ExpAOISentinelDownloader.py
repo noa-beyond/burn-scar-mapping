@@ -91,15 +91,12 @@ class Downloader:
         products['level'] = products.S3Path.apply(lambda x: x.split('/')[4])
         products = products[products.level == level]
         products['date'] = products.ContentDate.apply(lambda x: x['Start'])  
-
         self.logger.info(f"{len(products)} products after filtering for level '{level}'.")
-        
         products_sorted = products.sort_values('date', ascending=True).reset_index()
         products_sorted_with_cloud = self.find_cloud_coverage(bbox, start_date, end_date, cloud_coverage_threshold)
         merged_df = pd.merge(products_sorted, products_sorted_with_cloud, left_on='Name', right_on='title', how='left')
         filtered_df = merged_df[merged_df['cloud_coverage'].notna()].reset_index()
         products_sorted_filtered = products_sorted[products_sorted.Name.isin(filtered_df.Name)].reset_index(drop = True)
-        
         self.logger.info(f"{len(products_sorted_filtered)} products remain after cloud filtering.")
         
         if products_sorted_filtered.empty:
@@ -122,7 +119,7 @@ class Downloader:
         print("z:",len(products_sorted_post))
         post_cloud_index = - 1 - post_cloud_index
 
-        if post_cloud_index < len(products_sorted_post):
+        if abs(post_cloud_index) > len(products_sorted_post):
             self.logger.error(f"Post cloud index '{post_cloud_index}' is out of range for available post-images.")
             print("ERROR: You will have to give a new range for start_date and end_date and run again the code.")
             return None, None

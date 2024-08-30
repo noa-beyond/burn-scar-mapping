@@ -57,7 +57,6 @@ class Processor:
             gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.nc')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
             print(gdal_command)
             os.system(gdal_command)
-
             polygon = gpd.read_file(os.path.join(output_dir,'burned.shp'))
             polygon = polygon.set_crs(4326)
             polygon = polygon.to_crs(2100)
@@ -104,9 +103,9 @@ class Processor:
                 # Check if the folder exists and is not in the folders to keep
                 if os.path.isdir(folder_path) and image != image_name:
                     print(f"Deleting folder: {folder_path}")
-                    shutil.rmtree(folder_path)
+                    subprocess.run(['rmdir', '/S', '/Q', folder_path], shell=True, check=True)
 
-        except Exception as e:
+        except subprocess.CalledProcessError as e:
             logging.error(f'Error deleting folders: {e}')
             raise            
 
@@ -126,13 +125,12 @@ class Processor:
             data_collection = "SENTINEL-2"
             aoi = f"POLYGON(({bb[0]} {bb[1]},{bb[2]} {bb[1]},{bb[2]} {bb[3]},{bb[0]} {bb[3]},{bb[0]} {bb[1]}))'"  
             
-            flag = False; i =0; k = 0; z=0; pre_cloud_index = 0; post_cloud_index = 0
+            k = 0; z = 0; pre_cloud_index = 0; post_cloud_index = 0
             pre_cloud_bool = False; post_cloud_bool = False
 
             logging.info('For the pre image:')
             products_sorted_pre = self.downloader.search_sentinel(start_date, fire_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
             #print(products_sorted_pre['date'])   
-             
             while pre_cloud_bool == False and k < 5:
                 pre_id, pre_name, pre_tile = self.downloader.select_pre_image(products_sorted_pre, pre_cloud_index)
                 nbr_pre = self.download_n_create_nbr(pre_id, output_dir, pre_name)
@@ -140,21 +138,21 @@ class Processor:
                 #print('Pre_cloud_bool:',pre_cloud_bool), print('Pre_cloud_index:',pre_cloud_index)
                 k += 1
                 if k == 5: logging.warning('I have to stop after 5 iterations.')
+            
+            #self.delete_folders(output_dir,products_sorted_pre, pre_name)
 
             logging.info('For the post image:')
             products_sorted_post = self.downloader.search_sentinel(fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
             #print(products_sorted_post['date'])
-
-            while post_cloud_bool == False and k < 5: 
+            while post_cloud_bool == False and z < 5: 
                 post_id, post_name = self.downloader.select_post_image(pre_tile, products_sorted_post, post_cloud_index)
                 nbr_post = self.download_n_create_nbr(post_id,output_dir, post_name)
                 post_cloud_bool, post_cloud_index = self.downloader.check_clouds_in_aoi(bb,output_dir,post_name, post_cloud_index)
-                print('Post_cloud_bool:',post_cloud_bool), print('Post_cloud_index:',post_cloud_index) 
+                #print('Post_cloud_bool:',post_cloud_bool), print('Post_cloud_index:',post_cloud_index) 
                 z = z + 1 
                 if z == 5: print('I have to stop')    
 
-            # self.delete_folders(output_dir,products_sorted_pre, pre_name)
-            # self.delete_folders(output_dir,products_sorted_post, post_name)    
+            #self.delete_folders(output_dir,products_sorted_post, post_name)    
             logging.info('Process completed.')
             
             nbr_pre.to_netcdf(os.path.join(output_dir,'nbr_pre.nc'))

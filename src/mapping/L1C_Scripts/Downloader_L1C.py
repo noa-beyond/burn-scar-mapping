@@ -99,7 +99,8 @@ class Downloader:
         merged_df = pd.merge(products_sorted, products_sorted_with_cloud, left_on='Name', right_on='title', how='left')
         filtered_df = merged_df[merged_df['cloud_coverage'].notna()].reset_index()
         products_sorted_filtered = products_sorted[products_sorted.Name.isin(filtered_df.Name)].reset_index(drop = True)
-        
+        products_sorted_filtered = products_sorted_filtered.sort_values(['cloud_coverage', 'title'], ascending=True).reset_index()
+
         self.logger.info(f"{len(products_sorted_filtered)} products remain after cloud filtering.")
         
         if products_sorted_filtered.empty:
