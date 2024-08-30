@@ -139,7 +139,7 @@ class Processor:
                 k += 1
                 if k == 5: logging.warning('I have to stop after 5 iterations.')
             
-            #self.delete_folders(output_dir,products_sorted_pre, pre_name)
+            self.delete_folders(output_dir,products_sorted_pre, pre_name)
 
             logging.info('For the post image:')
             products_sorted_post = self.downloader.search_sentinel(fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
@@ -149,10 +149,10 @@ class Processor:
                 nbr_post = self.download_n_create_nbr(post_id,output_dir, post_name)
                 post_cloud_bool, post_cloud_index = self.downloader.check_clouds_in_aoi(bb,output_dir,post_name, post_cloud_index)
                 #print('Post_cloud_bool:',post_cloud_bool), print('Post_cloud_index:',post_cloud_index) 
-                z = z + 1 
+                z += 1 
                 if z == 5: print('I have to stop')    
 
-            #self.delete_folders(output_dir,products_sorted_post, post_name)    
+            self.delete_folders(output_dir,products_sorted_post, post_name)    
             logging.info('Process completed.')
             
             nbr_pre.to_netcdf(os.path.join(output_dir,'nbr_pre.nc'))

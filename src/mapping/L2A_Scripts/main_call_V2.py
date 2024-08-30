@@ -32,6 +32,6 @@ if __name__ == "__main__":
     mask_threshold = config['user_variables']['mask_threshold']
 
     debug = config['debug']
-    save_path = './'
-
+    #save_path = './'
+    save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save'
     main(username, password, client_id, client_secret, start_date, end_date, save_path, lat, lon)
