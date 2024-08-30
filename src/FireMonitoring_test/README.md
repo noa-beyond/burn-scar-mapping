@@ -1,5 +1,5 @@
 # Burned Area Monitor
-(from script FireMonitor.ipynb)
+(from script FireMonitor.ipynb but added many stuff)
 
 ## Features
 - Finds Sentinel 2 images from a given box (AOI) (BurnedAreaBox.json)
