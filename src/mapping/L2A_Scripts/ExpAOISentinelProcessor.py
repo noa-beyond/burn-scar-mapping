@@ -29,6 +29,7 @@ class Processor:
         index = (band1.values - band2_resampled.values) / (band1.values + band2_resampled.values)
         index = xr.DataArray(index.squeeze(), coords={'x': band1['x'], 'y': band1['y']}, dims=['y', 'x'])
         index = index.squeeze()
+        band1.close(), band2.close()
         return index
 
     def create_nbr(self, band8_path, band12_path):
@@ -98,18 +99,27 @@ class Processor:
     def delete_folders(self,output_dir,images, image_name):
         logging.info('Deleting folders.')
         try:
+
             for image in images['Name'].values:
                 folder_path = os.path.join(output_dir, image)
                 # Check if the folder exists and is not in the folders to keep
                 if os.path.isdir(folder_path) and image != image_name:
                     print(f"Deleting folder: {folder_path}")
-                    subprocess.run(['rmdir', '/S', '/Q', folder_path], shell=True, check=True)
-
-        except subprocess.CalledProcessError as e:
+                    try:
+                        shutil.rmtree(folder_path)
+                        #subprocess.run(['rmdir', '/S', '/Q', folder_path], shell=True, check=True)
+                    except:
+                        logging.warning(f'Error deleting folder: {folder_path}')
+                        pass
+        except Exception as e:
             logging.error(f'Error deleting folders: {e}')
-            raise            
+            raise
 
-    def process_burned_area(self, start_date, end_date, fire_date, lat, lon, output_dir):
+        # except subprocess.CalledProcessError as e:
+        #     logging.error(f'Error deleting folders: {e}')
+        #     raise            
+
+    def process_burned_area(self, start_date, end_date, pre_fire_date,post_fire_date, lat, lon, output_dir):
         logging.info(f'Starting process for burned area with start_date={start_date}, end_date={end_date}, lat={lat}, lon={lon}')
         try:
             if lon<=25: #TODO read with rioxarray and get the crs
@@ -129,7 +139,7 @@ class Processor:
             pre_cloud_bool = False; post_cloud_bool = False
 
             logging.info('For the pre image:')
-            products_sorted_pre = self.downloader.search_sentinel(start_date, fire_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
+            products_sorted_pre = self.downloader.search_sentinel(start_date, pre_fire_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
             #print(products_sorted_pre['date'])   
             while pre_cloud_bool == False and k < 5:
                 pre_id, pre_name, pre_tile = self.downloader.select_pre_image(products_sorted_pre, pre_cloud_index)
@@ -142,7 +152,7 @@ class Processor:
             self.delete_folders(output_dir,products_sorted_pre, pre_name)
 
             logging.info('For the post image:')
-            products_sorted_post = self.downloader.search_sentinel(fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
+            products_sorted_post = self.downloader.search_sentinel(post_fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
             #print(products_sorted_post['date'])
             while post_cloud_bool == False and z < 5: 
                 post_id, post_name = self.downloader.select_post_image(pre_tile, products_sorted_post, post_cloud_index)
