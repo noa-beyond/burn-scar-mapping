@@ -94,30 +94,29 @@ class Processor:
         except Exception as e:
             logging.error(f'Error downloading and creating NBR: {e}')
             raise
+
+    def handler(self, func, path, exc_info): 
+        print("Inside handler") 
+        print(exc_info)    
         
     # Function to delete folders from a given list of image names
     def delete_folders(self,output_dir,images, image_name):
-        logging.info('Deleting folders.')
+        logging.info('Deleting folders....')
         try:
-
             for image in images['Name'].values:
                 folder_path = os.path.join(output_dir, image)
                 # Check if the folder exists and is not in the folders to keep
                 if os.path.isdir(folder_path) and image != image_name:
-                    print(f"Deleting folder: {folder_path}")
+                    logging.info(f"Deleting folder: {folder_path}")
                     try:
-                        shutil.rmtree(folder_path)
-                        #subprocess.run(['rmdir', '/S', '/Q', folder_path], shell=True, check=True)
+                        shutil.rmtree(folder_path, onerror = self.handler) 
+                        logging.info(f"Successfully deleted folder: {folder_path}")
                     except:
                         logging.warning(f'Error deleting folder: {folder_path}')
                         pass
         except Exception as e:
             logging.error(f'Error deleting folders: {e}')
-            raise
-
-        # except subprocess.CalledProcessError as e:
-        #     logging.error(f'Error deleting folders: {e}')
-        #     raise            
+            raise  
 
     def process_burned_area(self, start_date, end_date, pre_fire_date,post_fire_date, lat, lon, output_dir):
         logging.info(f'Starting process for burned area with start_date={start_date}, end_date={end_date}, lat={lat}, lon={lon}')
@@ -164,6 +163,10 @@ class Processor:
 
             self.delete_folders(output_dir,products_sorted_post, post_name)    
             logging.info('Process completed.')
+
+            print('The images that will be used are:')
+            print('Pre image:', pre_name)
+            print('Post image:', post_name)
             
             nbr_pre.to_netcdf(os.path.join(output_dir,'nbr_pre.nc'))
             nbr_post.to_netcdf(os.path.join(output_dir,'nbr_post.nc'))
