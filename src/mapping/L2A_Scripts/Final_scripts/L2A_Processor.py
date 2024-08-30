@@ -14,7 +14,7 @@ from sentinelhub import SHConfig, DataCollection, SentinelHubCatalog, BBox, CRS
 import rioxarray 
 import subprocess
 import shutil 
-from ExpAOISentinelDownloader import Downloader
+from L2A_Downloader import Downloader
 
 class Processor:
     def __init__(self, downloader, cloud_coverage_threshold, mask_threshold):
