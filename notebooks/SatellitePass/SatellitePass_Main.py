@@ -17,17 +17,7 @@ with open(config_file_path, 'r') as config_file:
 latitude = config.get("latitude")
 longitude = config.get("longitude")
 base_kml_directory = config.get("base_kml_directory")
-'''
-for existing_file in os.listdir(base_kml_directory):
 
-    if existing_file.endswith('.kml'):
-        existing_kml_file_path = os.path.join(base_kml_directory, existing_file)
-        # List of KML filenames to process
-        kml_filenames = [existing_kml_file_path]
-
-print("print kml_filenames", kml_filenames)
-print("len(kml_filenames)", len(kml_filenames))
-'''
 # Initialize an empty list to store the KML file paths
 kml_filenames = []
 
