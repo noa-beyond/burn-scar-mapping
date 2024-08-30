@@ -122,7 +122,7 @@ class Downloader:
         pre_tile = products_sorted_pre.loc[0].tile
         pre_name = products_sorted_pre.loc[0].Name
         print("j:",len(products_sorted_pre))
-        self.logger.info(f"Selected pre - image: {pre_name}")
+        self.logger.info(f"Selected pre - image: {pre_name} with cloud coverage {products_sorted_pre.loc[0].cloud_coverage}")
         return pre_id, pre_name, pre_tile
     
     def select_post_image(self, pre_tile, products_sorted_post): 
@@ -130,7 +130,7 @@ class Downloader:
         print("z:",len(products_sorted_post))
         post_id =  products_sorted_post.loc[ products_sorted_post.index[-1]].Id
         post_name =  products_sorted_post.loc[ products_sorted_post.index[-1]].Name
-        self.logger.info(f"Selected post image: {post_name}")
+        self.logger.info(f"Selected post image: {post_name} with cloud coverage {products_sorted_post.loc[0].cloud_coverage}")
         return post_id, post_name
 
     def download_sentinel_image(self, image_id, output_dir, name='unknown'):

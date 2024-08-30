@@ -92,11 +92,10 @@ class Processor:
             save_dir = self.downloader.download_sentinel_image(image_id, output_dir, image_name)
             band8_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA','*_B08*.jp2')
             band12_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA','*_B12*.jp2')
-            band4_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA','*', '*_B04*.jp2')
-            band3_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA', '*','*_B03*.jp2')
-            band2_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA', '*','*_B02*.jp2')
+            band4_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA','*_B04*.jp2')
+            band3_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA','*_B03*.jp2')
+            band2_path_pattern = os.path.join(save_dir, 'GRANULE', '*', 'IMG_DATA','*_B02*.jp2')
             band8_path = glob.glob(band8_path_pattern)
-            print(band8_path)
             band12_path = glob.glob(band12_path_pattern)
             band4_path = glob.glob(band4_path_pattern)
             band3_path = glob.glob(band3_path_pattern)
@@ -123,7 +122,7 @@ class Processor:
             logging.error(f'Error deleting folders: {e}')
             raise            
 
-    def process_burned_area(self, start_date, end_date,fire_date, lat, lon, output_dir):
+    def process_burned_area(self, start_date, end_date, pre_fire_date, post_fire_date, lat, lon, output_dir):
         logging.info(f'Starting process for burned area with start_date={start_date}, end_date={end_date}, lat={lat}, lon={lon}')
         try:
             if lon<=25: #TODO read with rioxarray and get the crs
@@ -140,14 +139,14 @@ class Processor:
             aoi = f"POLYGON(({bb[0]} {bb[1]},{bb[2]} {bb[1]},{bb[2]} {bb[3]},{bb[0]} {bb[3]},{bb[0]} {bb[1]}))'"  
             
             logging.info('For the pre image:')
-            products_sorted_pre = self.downloader.search_sentinel(start_date, fire_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L1C')
+            products_sorted_pre = self.downloader.search_sentinel(start_date, pre_fire_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L1C')
            # print(products_sorted_pre['date'])   
 
             pre_id, pre_name, pre_tile = self.downloader.select_pre_image(products_sorted_pre,)
             nbr_pre = self.download_n_create_nbr(pre_id, output_dir, pre_name)
                 
             logging.info('For the post image:')
-            products_sorted_post = self.downloader.search_sentinel(fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L1C')
+            products_sorted_post = self.downloader.search_sentinel(post_fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L1C')
            # print(products_sorted_post['date'])
       
             post_id, post_name = self.downloader.select_post_image(pre_tile, products_sorted_post)
