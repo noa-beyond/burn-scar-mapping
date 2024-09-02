@@ -47,7 +47,7 @@ The class _L1C_Proseccor.py_ has a number of operations which are responsible fo
     - the percentage of cloud coverage in the downloaded image that we consider acceptable 
     - the mask threshond which defines the burned and not burned areas.
 
-**Example of the configuration file** 
+### **Example of the configuration file** 
 
 ![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Screenshot_1.png)    
 
