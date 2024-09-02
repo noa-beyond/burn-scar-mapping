@@ -8,3 +8,8 @@
 - Auto Saves NBR_PRE_FIRE.tiff, NBR_POST_FIRE.tiff
 - Auto saves NDVI_PRE_FIRE.tiff, NDVI_POST_FIRE.tiff
 - Auto Creates and Saves DNBR.tiff
+
+
+## How to Use
+- Open BurnedAreaBox.json and paste your AOI box that you copy from Sentinel Data Space
+- Open configs/config.yaml input start and end date for searching
