@@ -56,7 +56,6 @@ class Processor:
             result.to_netcdf(os.path.join(output_dir, 'burned.nc'))
             gdal_script = 'D:/programs/installed_in_D/anaconda3/envs/environment_V_p_3_10/Lib/site-packages/GDAL-3.9.1-py3.10-win-amd64.egg-info/scripts/gdal_polygonize.py'
             gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.nc')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
-            print(gdal_command)
             os.system(gdal_command)
             polygon = gpd.read_file(os.path.join(output_dir,'burned.shp'))
             polygon = polygon.set_crs(4326)
