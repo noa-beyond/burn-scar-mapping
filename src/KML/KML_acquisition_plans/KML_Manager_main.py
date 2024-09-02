@@ -1,6 +1,7 @@
 import logging
 import json
 import os
+import autoroot
 from datetime import datetime
 from src.KML.KML_acquisition_plans.KML_Manager_class import KMLManager
 
@@ -54,7 +55,7 @@ if __name__ == "__main__":
     logging.info("Starting the scheduled task...")
 
     # Path to the configuration file
-    config_file_path = 'burn-scar-mapping/src/KML/KML_acquisition_plans/config_directories.json'
+    config_file_path = 'burn-scar-mapping/src/configs/config_directories.json'
 
     # Run the job
     job(config_file_path)
