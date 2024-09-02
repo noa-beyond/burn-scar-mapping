@@ -31,7 +31,7 @@ The class _L1C_Proseccor.py_ has a number of operations which are responsible fo
 - the extraction of the burned area     
 
 ## **How to use:**
-1. **Fill in the configuration file** (config_file.json) with the necessary information for the code to run. Particularly, you should fill in:
+1. **Fill in the configuration file** (L1C_config_file.json) with the necessary information for the code to run. Particularly, you should fill in:
 
 - Information that are mandatory to download Sentinel - 2 images: 
     - client id
