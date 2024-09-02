@@ -51,13 +51,13 @@ The class _L2A_Proseccor.py_ has a number of operations which are responsible fo
     - the mask threshond which defines the burned and not burned areas.
 
 2. **Run the main script** main_call.py: 
-- From a Jupiter Notebook like the example below  
+- From a Jupyter Notebook like the example below  
 - From a Terminal  
 
 ### **Example of the configuration file** 
 
 ![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Configuration_File.png)    
 
-### **Example of the Jupiter Notebook** 
+### **Example of the Jupyter Notebook** 
 
-![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Run_Jupiter.png) 
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Run_Jupyter.png) 
