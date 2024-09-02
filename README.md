@@ -1,5 +1,6 @@
 
 # **Burn Scar Mapping for Sentinel L2A images**
+## **Overview**:
 The Purpose of this code is to respond to the need of automation for burned scar mapping. The code simply for a particular fire that occured given a search range (stant and end date), the fire date and duration, the latitude and longitude of the affected area extractes the burned area based on the dnbr inxtex (Difference Normalized Burn Ratio). The code secures that the processed Sentinel L2A images have very low cloud coverage since the maximum acceptable cloud coverage is 1% of the Area Of Interest and therefor the extraction of the affected area is successful. 
 
 ## **Features**:
