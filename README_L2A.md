@@ -32,21 +32,21 @@ The class _L2A_Proseccor.py_ has a number of operations which are responsible fo
 ## **How to use:**
 1. **Fill in the configuration file** (L2A_config_file.json) with the necessary information for the code to run. Particularly, you should fill in:
 
-- Information that are mandatory to download Sentinel - 2 images: 
-    - client id
-    - client secret 
-    - username
-    - password
+    - Information that are mandatory to download Sentinel - 2 images: 
+        - client id
+        - client secret 
+        - username
+        - password
 
-- Information that are related to a specific fire that occured in a specific area of interest, thus they are needed for the process: 
-    - the range of search dates (start_date and end_date)
-    - the fire date
-    - the fire duration
-    - the latitude and longitude of a point inside the AOI
+    - Information that are related to a specific fire that occured in a specific area of interest, thus they are needed for the process: 
+        - the range of search dates (start_date and end_date)
+        - the fire date
+        - the fire duration
+        - the latitude and longitude of a point inside the AOI
 
-- The variables that you prefer to be applied to the code:
-    - the percentage of cloud coverage in the downloaded image that we consider acceptable 
-    - the mask threshond which defines the burned and not burned areas.
+    - The variables that you prefer to be applied to the code:
+        - the percentage of cloud coverage in the downloaded image that we consider acceptable 
+        - the mask threshond which defines the burned and not burned areas.
 
 2. **Run the main script** main_call.py: 
 - From a Jupyter Notebook like the example below  
