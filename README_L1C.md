@@ -17,7 +17,7 @@ The class _L1C_Downloader.py_ has a number of operations which achieve:
 - the user certification
 - the search of products that meet the cloud criteria of the user 
 - the search of products that refer to a specific range of dates for Sentinel L1C products
-- the selection of the final pre - fire and post - fire images that have the lower cloud coverage percentage
+- the selection of the final pre - fire and post - fire images that have the lower cloud coverage percentage for the given search range
 - the downloading of the selected images
 
 
