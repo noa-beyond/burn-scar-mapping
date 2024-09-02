@@ -8,7 +8,7 @@ The Purpose of this code is to respond to the need of automation for Burned Scar
 The code is composed of one main script (main_call.py) and two classes: _L2A_Downloader.py_ , _LA2_Processor.py_ which are responsible for the downloading of the required images, their processing and consequently the extraction of the burned area.
 
 ### **1. Main Code**
-The main code _Main_call.py_ has the following structure:
+The main code L2A_main.py_ has the following structure:
 - Loads the config file and matches the required information to variables
 - Creates an object from the L2A_Downloader and an object fromt the L2A_Proseccor class
 - Calls the function process_burned_area from the L2A_Proseccor class which extracts the final burned area
