@@ -41,6 +41,7 @@ for i, kml_filename in enumerate(kml_filenames):
     # Get observation info for the specified point
     observation_info = satellite_pass.get_observation_info()
 
+    # Print the observation info
     if observation_info:
         print("\n------------------------------------------------------------------------------------------------------------")
         print(f"Processing file {i+1}/{len(kml_filenames)}: {kml_filename}")
