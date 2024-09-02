@@ -48,7 +48,7 @@ The class _L2A_Proseccor.py_ has a number of operations which are responsible fo
     - the percentage of cloud coverage in the downloaded image that we consider acceptable 
     - the mask threshond which defines the burned and not burned areas.
 
-![Configuration](D:/Praktiki/burned-scar-mapping/burn-scar-mapping/Screenshot_1.png)    
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Screenshot_1.png)    
 
 
 
