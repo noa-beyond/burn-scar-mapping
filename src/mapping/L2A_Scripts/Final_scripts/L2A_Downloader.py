@@ -107,6 +107,11 @@ class Downloader:
         pre_tile = products_sorted_pre.loc[pre_cloud_index].tile
         pre_name = products_sorted_pre.loc[pre_cloud_index].Name
 
+        if abs(pre_cloud_index) > len(products_sorted_pre):
+            self.logger.error(f"Pre cloud index '{pre_cloud_index}' is out of range for available pre-images.")
+            print("ERROR: You will have to give a new range for start_date and end_date and run again the code.")
+            return None, None
+
         self.logger.info(f"Selected pre - image: {pre_name}")
         return pre_id, pre_name, pre_tile
     
