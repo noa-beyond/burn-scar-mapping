@@ -4,6 +4,20 @@
 ## **Overview**:
 The purpose of this code is to respond to the need of automation for Burned Scar Mapping. The code simply for a particular fire that occured given a search range: start and end date, the fire date and duration, the latitude and longitude of the affected area, extracts the burned area based on the dnbr index (Difference Normalized Burn Ratio). The code secures that the processed Sentinel L1C images have low cloud coverage since the maximum acceptable cloud coverage of the downloaded images is given by the user and therefor the extraction of the affected area is successful. 
 
+## **Requirements**:
+- Install requirements.txt
+geopandas==1.0.1
+htmltools==0.5.3
+matplotlib==3.9.2
+numpy==2.1.0
+pandas==2.2.2
+rasterio==1.3.10
+Requests==2.32.3
+rioxarray==0.17.0
+sentinelhub==3.10.3
+Shapely==2.0.6
+xarray==2024.7.0
+
 ## **Features**:
 The code is composed of one main script (L1C_main.py) and two classes: _L1C_Downloader.py_ , _L1C_Processor.py_ which are responsible for the downloading of the required images, their processing and consequently the extraction of the burned area.
 
