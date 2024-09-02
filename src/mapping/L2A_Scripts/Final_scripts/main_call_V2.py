@@ -9,7 +9,24 @@ def load_config(config_path):
         config = json.load(config_file)
     return config
 
-def main(username, password, client_id, client_secret, start_date, end_date, output_dir, lat, lon):
+# TODO AMA DEN DINEI START DATE END DATE O XRISTIS
+def main(config_path= "config_file.json", save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save'):
+    config = load_config(config_path)
+    # Accessing the values from the config
+    client_id = config['sentinelhub']['client_id']
+    client_secret = config['sentinelhub']['client_secret']
+    username = config['sentinelhub']['username']
+    password = config['sentinelhub']['password']
+    start_date = config['process_info']['start_date']
+    fire_date = config['process_info']['fire_date']
+    end_date = config['process_info']['end_date']
+    fire_duration = config['process_info']['fire_duration']
+    lat = config['process_info']['lat']
+    lon = config['process_info']['lon']
+    cloud_coverage_threshold = config['user_variables']['cloud_coverage_threshold']
+    mask_threshold = config['user_variables']['mask_threshold']
+    debug = config['debug']
+   
     # Convert the string to a datetime object
     fire_date_ns = datetime.strptime(fire_date, "%Y-%m-%d")
     # Calculate pre_fire_date and post_fire_date
@@ -29,23 +46,4 @@ def main(username, password, client_id, client_secret, start_date, end_date, out
     logging.info(f"Processed data saved to: {processed_dir}")
 
 if __name__ == "__main__":
-
-    config = load_config('config_file.json')
-    # Accessing the values from the config
-    client_id = config['sentinelhub']['client_id']
-    client_secret = config['sentinelhub']['client_secret']
-    username = config['sentinelhub']['username']
-    password = config['sentinelhub']['password']
-    start_date = config['process_info']['start_date']
-    fire_date = config['process_info']['fire_date']
-    end_date = config['process_info']['end_date']
-    fire_duration = config['process_info']['fire_duration']
-    lat = config['process_info']['lat']
-    lon = config['process_info']['lon']
-    cloud_coverage_threshold = config['user_variables']['cloud_coverage_threshold']
-    mask_threshold = config['user_variables']['mask_threshold']
-
-    debug = config['debug']
-    save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save'
-
-    main(username, password, client_id, client_secret, start_date, end_date, save_path, lat, lon)
+    main(config_path= "config_file.json", save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save')
