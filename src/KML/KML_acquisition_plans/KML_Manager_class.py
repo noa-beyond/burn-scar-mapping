@@ -13,8 +13,8 @@ class KMLManager:
     '''
     def __init__(
             self, 
-            base_directory: str = 'update', 
-            s2a_directory: str = 'S2A', 
+            base_directory: str = 'update',
+            s2a_directory: str = 'S2A',
             s2b_directory: str = 'S2B',
             ):
         

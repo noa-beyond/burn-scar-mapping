@@ -1,6 +1,6 @@
 import json
 import os
-from SatellitePassPrediction_class import SatellitePassPrediction
+from src.KML.SatellitePass.SatellitePassPrediction_class import SatellitePassPrediction
 
 """
 Main script that uses the SatellitePassPrediction class to process a KML file,
@@ -8,8 +8,7 @@ extract satellite pass data, and find observation times for a specified location
 """
 
 # Main script
-# Path to the configuration file
-config_file_path = 'burn-scar-mapping/notebooks/SatellitePass/config_SatellitePass.json'
+
 def SatellitePass_Main(config_file_path: str = 'config_SatellitePass.json'):
     with open(config_file_path, 'r') as config_file:
                     config = json.load(config_file)
@@ -54,4 +53,8 @@ def SatellitePass_Main(config_file_path: str = 'config_SatellitePass.json'):
             print("The point is not within any of the polygons.")
 
 if __name__ == "__main__":
+    # Path to the configuration file
+    config_file_path = 'burn-scar-mapping/src/KML/SatellitePass/config_SatellitePass.json'
+
+    # Run SatellitePass_Main
     SatellitePass_Main(config_file_path)

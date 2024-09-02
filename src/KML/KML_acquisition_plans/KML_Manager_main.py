@@ -2,10 +2,7 @@ import logging
 import json
 import os
 from datetime import datetime
-from test_kml_manager_class import KMLManager
-
-# Path to the configuration file
-config_file_path = 'burn-scar-mapping/notebooks/KML_acquisition_plans/config_directories.json'
+from src.KML.KML_acquisition_plans.KML_Manager_class import KMLManager
 
 def job(config_file_path):
     logging.info("Running scheduled task...")
@@ -44,8 +41,8 @@ def job(config_file_path):
 if __name__ == "__main__":
     # Generate a timestamped log file name
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    log_filename = f'burn-scar-mapping/notebooks/KML_acquisition_plans/log_archive/test_kml_main{timestamp}.log'
-    
+    log_filename = f'burn-scar-mapping/src/KML/KML_acquisition_plans/log_archive/test_kml_main{timestamp}.log'
+
     # Set up logging to append to the existing log file instead of overwriting it
     logging.basicConfig(
         filename=log_filename,
@@ -53,8 +50,11 @@ if __name__ == "__main__":
         format='%(asctime)s - %(levelname)s - %(message)s',
         filemode='a'  # 'a' ensures that the log file is appended to, not overwritten
     )
-    
+
     logging.info("Starting the scheduled task...")
+
+    # Path to the configuration file
+    config_file_path = 'burn-scar-mapping/src/KML/KML_acquisition_plans/config_directories.json'
 
     # Run the job
     job(config_file_path)
