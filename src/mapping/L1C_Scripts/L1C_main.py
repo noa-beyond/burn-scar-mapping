@@ -1,8 +1,8 @@
 import json
 import logging
 from datetime import datetime, timedelta
-from L2A_Downloader import Downloader
-from L2A_Processor import Processor
+from L1C_Downloader import Downloader
+from L1C_Processor import Processor
 
 def load_config(config_path):
     with open(config_path, 'r') as config_file:
@@ -46,4 +46,4 @@ def main(config_path= "config_file.json", save_path = 'D:/Praktiki/burned-scar-m
     logging.info(f"Processed data saved to: {processed_dir}")
 
 if __name__ == "__main__":
-    main(config_path= "L2A_config_file.json", save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save')
+    main(config_path= "L1C_config_file.json", save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save')
