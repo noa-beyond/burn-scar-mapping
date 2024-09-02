@@ -47,9 +47,8 @@ The class _L1C_Proseccor.py_ has a number of operations which are responsible fo
     - the percentage of cloud coverage in the downloaded image that we consider acceptable 
     - the mask threshond which defines the burned and not burned areas.
 
+2. **Run the main script** main_call.py: the images and extracted burned area will be saved in the same file with the main script and the classes. 
+
 ### **Example of the configuration file** 
 
-![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Screenshot_1.png)    
-
-
-2. **Run the main script** main_call.py: the images and extracted burned area will be saved in the same file with the main script and the classes. 
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Configuration_File.png)    
