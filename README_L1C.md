@@ -47,7 +47,7 @@ The class _L1C_Proseccor.py_ has a number of operations which are responsible fo
     - the percentage of cloud coverage in the downloaded image that we consider acceptable 
     - the mask threshond which defines the burned and not burned areas.
 
-2. **Run the main script** main_call.py: 
+2. **Run the main script** L1C_main.py: 
 - From a Jupyter Notebook like the example below  
 - From a Terminal  
 
