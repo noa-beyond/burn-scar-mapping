@@ -1,0 +1,145 @@
+# Paths to shapefiles and their corresponding EPSG codes
+shapefiles:
+  path1: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/penteli/final_burned_varnavas.shp # New burned map shapefile path
+  epsg1: EPSG:32634 # New burned map epsg
+  path2: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/greece-latest-free-shp/gis_osm_places_free_1.shp # Settlements shapefile path
+  epsg2: EPSG:4326 # Settlements epsg
+  path3: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/BSM_2009_Attiki/BSM_2009_Attiki.shp # Old burned map shapefile path
+  epsg3: EPSG:4326 # Old burned map epsg
+
+# Dates related to detection and download of data
+dates:
+  detection: 11/08/2024 15:15  # Date and time of fire detection
+  download: 07/08/2024 και 13/08/2024  # Dates when the data was downloaded
+
+# Area information
+area: '9956'  # Burned area in hectares (ha)
+
+# Product description
+product: |-
+  Επεξεργασμένες Δορυφορικές Εικόνες PlanetScope πολύ υψηλής χωρικής
+  ανάλυσης (3m)  # Details about the satellite images used
+
+# Paths to logos and their positions in the output
+logos:
+  north: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/north.png
+  x_north: 1.75  # X position of the north arrow logo
+  y_north: 0.41  # Y position of the north arrow logo
+  first: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/AsteroskopoioLogoOuranidon.jpg
+  second: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/IAADET.png
+  third: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/BEYOND_LOGO.png
+  fourth: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/eratosthenes.png
+  x: 0.1  # X position of the logos
+  y: 1.05  # Y position of the logos
+
+# Paths to images and related parameters
+images:
+  burned_map: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/temp/map_burned.png
+  cropped_burned_map: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/comparison_map_burned_cropped.png
+  dpi: 150  # Resolution of the image
+  crop_factor: 500  # Factor used for cropping the image (x-axis)
+
+# FireHub-related information
+firehub:
+  name: FireHub  # Name of the service
+  x: 1.54  # X position of the FireHub label
+  y: 1.06  # Y position of the FireHub label
+
+# Information for the legend (Υπόμνημα)
+ypomnima:
+  name: Υπόμνημα  # Title of the legend
+  y: 0.45  # Y position of the legend
+  id_name1: id  # Identifier for the first item in the legend
+  label1: Καμένη έκταση 2024, 9956 ha  # Label for the new burned area
+  id_name2: osm_id  # Identifier for the second item in the legend
+  label2: Οικισμοί  # Label for settlements
+  id_name3: id  # Identifier for the third item in the legend
+  label3: Καμένη έκταση 2009, 13043 ha  # Label for the old burned area
+  xlabel: 0.7  # X position of the labels
+  ylabel: -0.34  # Y position of the labels
+
+# Information about the place being mapped
+place:
+  name: Βορειοανατολική Αττική  # Name of the place
+  y: 0.98  # Y position of the place name
+
+# Subtitle details
+subtitle:
+  name: Απεικόνιση πυρκαγιών 2009-2024  # Subtitle text
+  y: 0.97  # Y position of the subtitle
+
+# Date of production of the map
+production_date:
+  name: 'Ημερομηνία Παραγωγής: '  # Label for production date
+  x: 1.285  # X position of the production date
+  y: 0.93  # Y position of the production date
+
+# Map information text
+map_information:
+  name: Πληροφορίες Χάρτη  # Title for map information section
+  y_name: 0.31  # Y position of the map information title
+  text: | # Map information description
+    Ο χάρτης έχει δημιουργηθεί από το Κέντρο Αριστείας BEYOND του
+    ΙΑΑΔΕΤ/ΕΑΑ. O σκοπός του προϊόντος αυτού είναι να δώσει μια
+    σύγκρίση της επιφάνειας των καμένων εκτάσεων των πυρκαγιών στη
+    {place}, το 2009 και το 2024, όπου ανιχνεύτηκε από
+    την υπηρεσία ανίχνευσης και παρακολούθησης πυρκαγιών FireHub
+    (http://beyond-eocenter.eu/index.php/web-services/firehub) του Κέντρου
+    Επιστημών Παρατήρησης της Γης και Δορυφορικής Τηλεπισκόπησης
+    BEYOND (http://beyond-eocenter.eu/) του ΙΑΑΔΕΤ/ΕΑΑ (www.noa.gr).
+  y_text: 0.244  # Y position of the map information text
+
+# Data sources information
+sources:
+  name: Πηγές Δεδομένων  # Title for sources section
+  y_name: 0.175  # Y position of the sources title
+  text: Επεξεργασμένες Δορυφορικές Εικόνες.  # Brief description of data sources
+  y_text: 0.16  # Y position of the sources text
+
+# Information about publication
+publication:
+  name: Δημοσίευση  # Title for publication section
+  y_name: 0.133  # Y position of the publication title
+  text: |- # Publication text
+    Το προϊόν διατίθεται μέσω της ιστοσελίδας του BEYOND στην ακόλουθη
+    διεύθυνση URL: http://beyond-eocenter.eu/index.php/fires
+  y_text: 0.111  # Y position of the publication text
+
+# Team members who worked on the mapping
+team:
+  name: Ομάδα Χαρτογράφησης  # Title for team section
+  y_name: 0.079  # Y position of the team title
+  text: |- # List of team members
+    Νίκος Αναστασίου
+    Ελένη Σακά
+    Ιωάννης Μερκούρης
+    Αλκίνοος Γεωργής
+    Βαλεντίνα Κανάκη
+    Μάρθα Κοκκαλίδου
+    Στέλλα Γκίρτσου
+    Δρ. Χάρης Κοντοές  
+  y_text: 0.017  # Y position of the team text
+
+# Contact details
+contact_details:
+  name: Στοιχεία Επικοινωνίας  # Title for contact details section
+  y_name: -0.054  # Y position of the contact title
+  text: |- # Contact information
+    Δρ. Χάρης Κοντοές, Διευθυντής Ερευνών ΕΑΑ
+    E-mail: kontoes@noa.gr  
+  y_text: -0.077  # Y position of the contact details text
+
+# Positioning information for the text
+text_position:
+  x: 1.029  # X position of the text
+  y: 0.23  # Y position of the text
+
+# Map display parameters
+map:
+  expansion_factor: 0.1  # Factor for expanding the map
+  expansion_factor2: 5  # Factor for expanding the inset map
+  ysize: 6  # Y size of the map
+  x: 0.74  # X position of the map
+  y: 0.55  # Y position of the map
+  width: 0.4  # Width of the map
+  height: 0.5  # Height of the map

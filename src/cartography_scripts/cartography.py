@@ -1,23 +1,16 @@
 import json
+import yaml
 import geopandas as gpd
-from geopandas import GeoDataFrame
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import contextily as ctx
-#import folium
-#from folium.plugins import Search
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-import cartopy.mpl.ticker as cticker
-import cartopy.feature as cfeature
-#from skimage.transform import resize
-from matplotlib_scalebar.scalebar import ScaleBar
 from shapely.geometry import Polygon
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import matplotlib.font_manager as fm
 from PIL import Image
 from matplotlib.lines import Line2D
-import math
 import numpy as np
 import os
 from datetime import datetime
@@ -38,7 +31,7 @@ from datetime import datetime
 def create_map(config_file):
     # Load the configuration from the JSON file
     with open(config_file, 'r', encoding='utf-8') as f:
-        config = json.load(f)
+        config = yaml.safe_load(f)
 
     # Load the shapefiles
     shapefile1 = gpd.read_file(config['shapefiles']['path1'])
@@ -223,4 +216,4 @@ def create_map(config_file):
     # Optionally, show the cropped image
     cropped_image.show()
 
-create_map('cartography_configs/cartography_config.json')
+create_map('cartography_configs/cartography_config.yaml')
