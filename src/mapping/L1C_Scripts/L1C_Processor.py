@@ -55,21 +55,7 @@ class Processor:
             result.to_netcdf(os.path.join(output_dir, 'burned.nc'))
             gdal_script = 'D:/programs/installed_in_D/anaconda3/envs/environment_V_p_3_10/Lib/site-packages/GDAL-3.9.1-py3.10-win-amd64.egg-info/scripts/gdal_polygonize.py'
             gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.nc')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
-            print(gdal_command)
             os.system(gdal_command)
-        
-            # gdal_script = 'D:/programs/installed_in_D/anaconda3/envs/environment_V_p_3_10/Lib/site-packages/GDAL-3.9.1-py3.10-win-amd64.egg-info/scripts/gdal_polygonize.py'
-            # gdal_script = 'D:/Praktiki/WILDFIRE_MAPPING/polygonize_pz/gdal_polygonize.py'
-            # input_raster = os.path.join(output_dir, 'burned.nc')
-            # output_shapefile = os.path.join(output_dir, 'burned.shp')
-            # gdal_command = f'python {gdal_script} {input_raster} -b 1 {output_shapefile}'
-            # result = subprocess.run(gdal_command, shell=True, capture_output=True, text=True)
-            # print("Standard Output:n", result.stdout)
-            # print("Standard Error:\n", result.stderr)
-            # print("Return Code:", result.returncode)
-        
-            # print("output_shapefile: ", output_shapefile )
-
             polygon = gpd.read_file(os.path.join(output_dir,'burned.shp'))
             polygon = polygon.set_crs(4326)
             polygon = polygon.to_crs(2100)
@@ -140,21 +126,17 @@ class Processor:
             
             logging.info('For the pre image:')
             products_sorted_pre = self.downloader.search_sentinel(start_date, pre_fire_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L1C')
-           # print(products_sorted_pre['date'])   
-
             pre_id, pre_name, pre_tile = self.downloader.select_pre_image(products_sorted_pre,)
             nbr_pre = self.download_n_create_nbr(pre_id, output_dir, pre_name)
                 
             logging.info('For the post image:')
             products_sorted_post = self.downloader.search_sentinel(post_fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L1C')
-           # print(products_sorted_post['date'])
-      
             post_id, post_name = self.downloader.select_post_image(pre_tile, products_sorted_post)
             nbr_post = self.download_n_create_nbr(post_id,output_dir, post_name)
         
-            # self.delete_folders(output_dir,products_sorted_pre, pre_name)
-            # self.delete_folders(output_dir,products_sorted_post, post_name)    
-            logging.info('Process completed.')
+            self.delete_folders(output_dir,products_sorted_pre, pre_name)
+            self.delete_folders(output_dir,products_sorted_post, post_name)      
+            logging.info('Process completed.')  
             
             nbr_pre.to_netcdf(os.path.join(output_dir,'nbr_pre.nc'))
             nbr_post.to_netcdf(os.path.join(output_dir,'nbr_post.nc'))

@@ -67,7 +67,7 @@ class Downloader:
             time=time_user,
         )
         results = list(search_iterator)
-        #self.logger.info(f"Found {len(results)} products for the specified time range.")
+      
         return results
 
     def find_cloud_coverage(self, bbox, start_date, end_date, cloud_coverage_threshold=10):
@@ -78,7 +78,7 @@ class Downloader:
         products['cloud_coverage'] = products['properties'].apply(lambda x: x['eo:cloud_cover'])
         products = products[products.cloud_coverage <= cloud_coverage_threshold]
         products_sorted_with_cloud = products.sort_values(['date', 'title'], ascending=True).reset_index()
-        #print(products_sorted_with_cloud['title'])
+       
         self.logger.info(f"{len(products_sorted_with_cloud)} products meet the cloud coverage criteria.")
         return products_sorted_with_cloud
     
@@ -94,20 +94,11 @@ class Downloader:
         self.logger.info(f"{len(products)} products after filtering for level '{level}'.")
         
         products_sorted = products.sort_values('date', ascending=True).reset_index()
-        #print(products_sorted['Name'])
         products_sorted_with_cloud = self.find_cloud_coverage(bbox, start_date, end_date, cloud_coverage_threshold)
         merged_df = pd.merge(products_sorted, products_sorted_with_cloud, left_on='Name', right_on='title', how='left')
-        #print(merged_df)
         filtered_df = merged_df[merged_df['cloud_coverage'].notna()].reset_index()
-        #print(filtered_df)
-        #products_sorted_filtered = products_sorted[products_sorted.Name.isin(filtered_df.Name)].reset_index(drop = True)
-        #to allazoymje guia na krataei tun stili me to cloud coverage
         products_sorted_filtered = pd.merge(products_sorted, filtered_df[['Name', 'cloud_coverage']], on='Name', how='inner').reset_index(drop=True)
-        
-        #print(products_sorted_filtered) apo auto to print kseroume oti krataei ola ta attributes oxi mono to cloud coverage kai to name
         products_sorted_filtered = products_sorted_filtered.sort_values(['cloud_coverage', 'Name'], ascending=True).reset_index()
-        
-        #print(products_sorted_filtered['Name'])
 
         self.logger.info(f"{len(products_sorted_filtered)} products remain after cloud filtering.")
         

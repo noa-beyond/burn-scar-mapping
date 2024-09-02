@@ -66,7 +66,6 @@ class Processor:
             polygon = polygon[polygon.area>25000]
             polygon_buffer = polygon.buffer(40, join_style=1).buffer(-40.0, join_style=1)
             polygon_buffer = polygon_buffer.simplify(tolerance=5)
-            #smoothed_polygons = polygon['geometry'].simplify(tolerance=20) # Adjust the tolerance value as needed
             polygon_buffer.to_file((os.path.join(output_dir,'burned_smoothed_buffer40_simplify5.shp')))
             logging.info('Burned area exported and processed successfully.')
 
@@ -139,12 +138,12 @@ class Processor:
 
             logging.info('For the pre image:')
             products_sorted_pre = self.downloader.search_sentinel(start_date, pre_fire_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
-            #print(products_sorted_pre['date'])   
+            
             while pre_cloud_bool == False and k < 5:
                 pre_id, pre_name, pre_tile = self.downloader.select_pre_image(products_sorted_pre, pre_cloud_index)
                 nbr_pre = self.download_n_create_nbr(pre_id, output_dir, pre_name)
                 pre_cloud_bool, pre_cloud_index = self.downloader.check_clouds_in_aoi(bb,output_dir,pre_name, pre_cloud_index)
-                #print('Pre_cloud_bool:',pre_cloud_bool), print('Pre_cloud_index:',pre_cloud_index)
+                
                 k += 1
                 if k == 5: logging.warning('I have to stop after 5 iterations.')
             
@@ -152,12 +151,12 @@ class Processor:
 
             logging.info('For the post image:')
             products_sorted_post = self.downloader.search_sentinel(post_fire_date, end_date, aoi, bb, self.cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A')
-            #print(products_sorted_post['date'])
+            
             while post_cloud_bool == False and z < 5: 
                 post_id, post_name = self.downloader.select_post_image(pre_tile, products_sorted_post, post_cloud_index)
                 nbr_post = self.download_n_create_nbr(post_id,output_dir, post_name)
                 post_cloud_bool, post_cloud_index = self.downloader.check_clouds_in_aoi(bb,output_dir,post_name, post_cloud_index)
-                #print('Post_cloud_bool:',post_cloud_bool), print('Post_cloud_index:',post_cloud_index) 
+                
                 z += 1 
                 if z == 5: print('I have to stop')    
 

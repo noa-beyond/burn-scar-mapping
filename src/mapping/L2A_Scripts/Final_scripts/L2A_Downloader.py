@@ -67,7 +67,6 @@ class Downloader:
             time=time_user,
         )
         results = list(search_iterator)
-        #self.logger.info(f"Found {len(results)} products for the specified time range.")
         return results
 
     def find_cloud_coverage(self, bbox, start_date, end_date, cloud_coverage_threshold=10):
@@ -84,9 +83,7 @@ class Downloader:
     def search_sentinel(self, start_date, end_date, aoi_polygon ,bbox,cloud_coverage_threshold, data_collection = "SENTINEL-2", level = 'L2A'):
         json = requests.get(f"https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=Collection/Name eq '{data_collection}' and OData.CSC.Intersects(area=geography'SRID=4326;{aoi_polygon}) and ContentDate/Start gt {start_date}T00:00:00.000Z and ContentDate/Start lt {end_date}T00:00:00.000Z").json()
         products = pd.DataFrame.from_dict(json['value'])
-
-        self.logger.info(f"Found {len(products)} products for the search criteria.")
-        
+        self.logger.info(f"Found {len(products)} products for the search criteria.")    
         products['tile'] = products.Name.apply(lambda x: x.split('_')[5][1:])
         products['level'] = products.S3Path.apply(lambda x: x.split('/')[4])
         products = products[products.level == level]
