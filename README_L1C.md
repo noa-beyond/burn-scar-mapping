@@ -2,18 +2,16 @@
 # **Burn Scar Mapping for Sentinel L1C images**
 
 ## **Overview**:
-The Purpose of this code is to respond to the need of automation for Burned Scar Mapping. The code simply for a particular fire that occured given a search range: start and end date, the fire date and duration, the latitude and longitude of the affected area extracts the burned area based on the dnbr index (Difference Normalized Burn Ratio). The code secures that the processed Sentinel L1C images have low cloud coverage since the maximum acceptable cloud coverage of the downloaded images is given by the user and therefor the extraction of the affected area is successful. 
+The Purpose of this code is to respond to the need of automation for Burned Scar Mapping. The code simply for a particular fire that occured given a search range: start and end date, the fire date and duration, the latitude and longitude of the affected area, extracts the burned area based on the dnbr index (Difference Normalized Burn Ratio). The code secures that the processed Sentinel L1C images have low cloud coverage since the maximum acceptable cloud coverage of the downloaded images is given by the user and therefor the extraction of the affected area is successful. 
 
 ## **Features**:
 The code is composed of one main script (L1C_main.py) and two classes: _L1C_Downloader.py_ , _L1C_Processor.py_ which are responsible for the downloading of the required images, their processing and consequently the extraction of the burned area.
 
 ### **1. Main Code**
-The main code L1C_main.py_ has the following structure:
-- Loads the config file and matches the required information to variables
+The main code L1C_main.py has the following structure:
+- Loads the configuration file and matches the required information to variables
 - Creates an object from the L1C_Downloader and an object fromt the L1C_Proseccor class
 - Calls the function process_burned_area from the L1C_Proseccor class which extracts the final burned area     
-
-Its worth to be noted that the images and extracted burned area will be saved in the same file with the main script and the classes.   
 
 ### **2. Class L1C_Downloader.py**
 The class _L1C_Downloader.py_ has a number of operations which achieve:

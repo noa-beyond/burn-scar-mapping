@@ -2,18 +2,16 @@
 # **Burn Scar Mapping for Sentinel L2A images**
 
 ## **Overview**:
-The Purpose of this code is to respond to the need of automation for Burned Scar Mapping. The code simply for a particular fire that occured given a search range start and end date, the fire date and duration, the latitude and longitude of the affected area extracts the burned area based on the dnbr index (Difference Normalized Burn Ratio). The code secures that the processed Sentinel L2A images have very low cloud coverage since the maximum acceptable cloud coverage is 1% of the Area Of Interest and therefor the extraction of the affected area is successful. 
+The Purpose of this code is to respond to the need of automation for Burned Scar Mapping. The code simply for a particular fire that occured given a search range: start and end date, the fire date and duration, the latitude and longitude of the affected area, extracts the burned area based on the dnbr index (Difference Normalized Burn Ratio). The code secures that the processed Sentinel L2A images have very low cloud coverage since the maximum acceptable cloud coverage is 1% of the Area Of Interest and therefor the extraction of the affected area is successful. 
 
 ## **Features**:
 The code is composed of one main script (L2A_main.py) and two classes: _L2A_Downloader.py_ , _LA2_Processor.py_ which are responsible for the downloading of the required images, their processing and consequently the extraction of the burned area.
 
 ### **1. Main Code**
-The main code L2A_main.py_ has the following structure:
-- Loads the config file and matches the required information to variables
+The main code L2A_main.py has the following structure:
+- Loads the configuration file and matches the required information to variables
 - Creates an object from the L2A_Downloader and an object fromt the L2A_Proseccor class
-- Calls the function process_burned_area from the L2A_Proseccor class which extracts the final burned area
-
-Its worth to be noted that the images and extracted burned area will be saved in the same file with the main script and the classes.     
+- Calls the function process_burned_area from the L2A_Proseccor class which extracts the final burned area    
 
 ### **2. Class L2A_Downloader.py**
 The class _L2A_Downloader.py_ has a number of operations which achieve:
