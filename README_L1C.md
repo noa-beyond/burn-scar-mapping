@@ -13,6 +13,8 @@ The main code _Main_call.py_ has the following structure:
 - Creates an object from the L1C_Downloader and an object fromt the L1C_Proseccor class
 - Calls the function process_burned_area from the L1C_Proseccor class which extracts the final burned area     
 
+Its worth to be noted that the images and extracted burned area will be saved in the same file with the main script and the classes.   
+
 ### **2. Class L1C_Downloader.py**
 The class _L1C_Downloader.py_ has a number of operations which achieve:
 - the user certification
@@ -47,8 +49,14 @@ The class _L1C_Proseccor.py_ has a number of operations which are responsible fo
     - the percentage of cloud coverage in the downloaded image that we consider acceptable 
     - the mask threshond which defines the burned and not burned areas.
 
-2. **Run the main script** main_call.py: the images and extracted burned area will be saved in the same file with the main script and the classes. 
+2. **Run the main script** main_call.py: 
+- From a Jupiter Notebook like the example below  
+- From a Terminal  
 
 ### **Example of the configuration file** 
 
-![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Configuration_File.png)    
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Configuration_File.png) 
+
+### **Example of the Jupiter Notebook** 
+
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Run_Jupiter.png) 

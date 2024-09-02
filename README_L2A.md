@@ -11,7 +11,9 @@ The code is composed of one main script (main_call.py) and two classes: _L2A_Dow
 The main code _Main_call.py_ has the following structure:
 - Loads the config file and matches the required information to variables
 - Creates an object from the L2A_Downloader and an object fromt the L2A_Proseccor class
-- Calls the function process_burned_area from the L2A_Proseccor class which extracts the final burned area     
+- Calls the function process_burned_area from the L2A_Proseccor class which extracts the final burned area
+
+Its worth to be noted that the images and extracted burned area will be saved in the same file with the main script and the classes.     
 
 ### **2. Class L2A_Downloader.py**
 The class _L2A_Downloader.py_ has a number of operations which achieve:
@@ -48,8 +50,14 @@ The class _L2A_Proseccor.py_ has a number of operations which are responsible fo
     - the percentage of cloud coverage in the downloaded image that we consider acceptable 
     - the mask threshond which defines the burned and not burned areas.
 
-2. **Run the main script** main_call.py: the images and extracted burned area will be saved in the same file with the main script and the classes. 
+2. **Run the main script** main_call.py: 
+- From a Jupiter Notebook like the example below  
+- From a Terminal  
 
 ### **Example of the configuration file** 
 
 ![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Configuration_File.png)    
+
+### **Example of the Jupiter Notebook** 
+
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Run_Jupiter.png) 

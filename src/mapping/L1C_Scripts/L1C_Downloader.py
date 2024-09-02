@@ -112,13 +112,11 @@ class Downloader:
         pre_id = products_sorted_pre.loc[0].Id
         pre_tile = products_sorted_pre.loc[0].tile
         pre_name = products_sorted_pre.loc[0].Name
-        print("j:",len(products_sorted_pre))
         self.logger.info(f"Selected pre - image: {pre_name} with cloud coverage {products_sorted_pre.loc[0].cloud_coverage}")
         return pre_id, pre_name, pre_tile
     
     def select_post_image(self, pre_tile, products_sorted_post): 
         products_sorted_post = products_sorted_post[products_sorted_post.tile == pre_tile]
-        print("z:",len(products_sorted_post))
         post_id =  products_sorted_post.loc[ products_sorted_post.index[-1]].Id
         post_name =  products_sorted_post.loc[ products_sorted_post.index[-1]].Name
         self.logger.info(f"Selected post image: {post_name} with cloud coverage {products_sorted_post.loc[0].cloud_coverage}")
