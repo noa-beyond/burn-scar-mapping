@@ -12,7 +12,7 @@ if __name__ == "__main__":
         burnedAreaBox = json.load(file)
     file.close()
 
-    with open('configs/config.yaml', 'r') as file_config:
+    with open('configs/config_fire_monitor.yaml', 'r') as file_config:
         config = yaml.load(file_config, yaml.FullLoader)
         start_DATE = config['start_DATE']
         end_DATE   = config['end_DATE']

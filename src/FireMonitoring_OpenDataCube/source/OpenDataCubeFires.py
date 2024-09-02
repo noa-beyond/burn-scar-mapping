@@ -64,7 +64,7 @@ class FireMonitor:
 
 
     def load_url(self):
-        with open('configs/config_url.yaml', 'r') as file:
+        with open('configs/config_url_fire_monitor.yaml', 'r') as file:
             config = yaml.load(file, yaml.FullLoader)
         return config['STAC_URL'], config['STAC_COLLECTION']    
     

@@ -7,7 +7,7 @@ from source.pie_chart_fnal_python import PlotCLC
 
 if __name__ == "__main__":
     # load path for shapefiles
-    with open('configs/config_auto.yaml') as file:
+    with open('configs/config_BAS_auto.yaml') as file:
         config = yaml.load(file, yaml.FullLoader)
         file.close()
 
