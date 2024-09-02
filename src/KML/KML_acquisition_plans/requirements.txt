@@ -1,0 +1,4 @@
+auto_mix_prep==0.2.0
+autoroot==1.0.1
+beautifulsoup4==4.12.3
+Requests==2.32.3

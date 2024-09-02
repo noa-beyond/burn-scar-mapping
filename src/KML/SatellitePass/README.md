@@ -56,4 +56,4 @@ The script reads settings from a JSON configuration file (config_SatellitePass.j
 ```
 
 ## How to Use
-check this notebook ()
+check this notebook (requirements.txt)

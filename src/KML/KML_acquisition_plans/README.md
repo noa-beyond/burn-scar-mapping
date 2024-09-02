@@ -48,6 +48,6 @@ The script reads the directory paths from a JSON configuration file. The default
 ```
 
 ## How to Use
-check this notebook ()
+check this notebook (requirements.txt)
 
 
