@@ -30,7 +30,7 @@ def main(config_path= "config_file.json", save_path = 'D:/Praktiki/burned-scar-m
     # Convert the string to a datetime object
     fire_date_ns = datetime.strptime(fire_date, "%Y-%m-%d")
     # Calculate pre_fire_date and post_fire_date
-    pre_fire_date_ns = fire_date_ns - timedelta(days = fire_duration)
+    pre_fire_date_ns = fire_date_ns - timedelta(days = 1)
     post_fire_date_ns = fire_date_ns + timedelta(days = fire_duration)
     # Convert back to string
     pre_fire_date = pre_fire_date_ns.strftime("%Y-%m-%d")
