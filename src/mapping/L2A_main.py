@@ -1,5 +1,6 @@
 import json
 import logging
+import autoroot
 from datetime import datetime, timedelta
 from L2A_Downloader import Downloader
 from L2A_Processor import Processor
@@ -46,4 +47,4 @@ def main(config_path= "config_file.json", save_path = './'):
     logging.info(f"Processed data saved to: {processed_dir}")
 
 if __name__ == "__main__":
-    main(config_path= "L2A_config_file.json", save_path = './')
+    main(config_path= "burn-scar-mapping/configs/L2A_config_file.json", save_path = './')

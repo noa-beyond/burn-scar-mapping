@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import autoroot
 import json
 from source.OpenDataCubeFires import FireMonitor
 import yaml
@@ -8,11 +9,11 @@ import yaml
 if __name__ == "__main__":
     
     # path to geojson file containing bounding box of burned area
-    with open('BurnedAreaBox.json', 'r') as file:
+    with open('burn-scar-mapping/configs/BurnedAreaBox.json', 'r') as file:
         burnedAreaBox = json.load(file)
     file.close()
 
-    with open('configs/config_fire_monitor.yaml', 'r') as file_config:
+    with open('burn-scar-mapping/configs/config_fire_monitor.yaml', 'r') as file_config:
         config = yaml.load(file_config, yaml.FullLoader)
         start_DATE = config['start_DATE']
         end_DATE   = config['end_DATE']

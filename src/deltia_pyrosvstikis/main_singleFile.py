@@ -1,12 +1,13 @@
 from source.pyrosvestiki import DeltiaFire
 import yaml
+import autoroot
 import os
 # To A/A einai me ellinika grammata
 
 
 if __name__ == "__main__":
 
-    with open('configs/config_deltia_singleFile.yaml', encoding='utf8') as configFile:
+    with open('burn-scar-mapping/configs/config_deltia_singleFile.yaml', encoding='utf8') as configFile:
         config = yaml.load(configFile, yaml.FullLoader)
         
     pdf_path   = config['Input_PDF_File_PATH']
