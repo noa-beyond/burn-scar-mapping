@@ -1,0 +1,145 @@
+# Paths to shapefiles and their corresponding EPSG codes
+shapefiles:
+  path1: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/penteli/final_burned_varnavas.shp # Burned map shapefile path
+  epsg1: EPSG:32634 # Burned map epsg
+  path2: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/greece-latest-free-shp/gis_osm_places_free_1.shp # Settlements shapefile path
+  epsg2: EPSG:4326 # Settlements epsg
+
+# Dates related to detection and download of data
+dates:
+  detection: 11/08/2024 15:15  # Date and time of fire detection
+  download: 07/08/2024 και 13/08/2024  # Dates when the data was downloaded
+
+# Area information
+area: '9956'  # Burned area in hectares (ha)
+
+# Paths to logos and their positions in the output
+logos:
+  north: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/north.png
+  x_north: 1.97  # X position of the north arrow logo
+  y_north: 0.38  # Y position of the north arrow logo
+  first: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/AsteroskopoioLogoOuranidon.jpg
+  second: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/IAADET.png
+  third: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/BEYOND_LOGO.png
+  fourth: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/eratosthenes.png
+  x: 0.1  # X position of the logos
+  y: 1.05  # Y position of the logos
+
+# Paths to images and related parameters
+images:
+  burned_map: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/temp/map_burned.png
+  cropped_burned_map: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/cartography_map_burned_cropped.png
+  dpi: 200  # Resolution of the image
+  crop_factor: 675  # Factor used for cropping the image (x-axis)
+
+# FireHub-related information
+firehub:
+  name: FireHub  # Name of the service
+  x: 1.7  # X position of the FireHub label
+  y: 1.06  # Y position of the FireHub label
+
+# Information for the legend (Υπόμνημα)
+ypomnima:
+  name: Υπόμνημα  # Title of the legend
+  y: 0.42  # Y position of the legend
+  id_name1: id  # Identifier for the first item in the legend
+  label1: Καμένη έκταση  # Label for the burned area
+  id_name2: osm_id  # Identifier for the second item in the legend
+  label2: Οικισμοί  # Label for settlements
+  xlabel: 0.4  # X position of the labels
+  ylabel: -0.3  # Y position of the labels
+
+# Information about the place being mapped
+place:
+  name: Βορειοανατολική Αττική  # Name of the place
+  y: 0.98  # Y position of the place name
+
+# Subtitle details
+subtitle:
+  name: |- # Subtitle text
+    Εκτίμηση των καμένων εκτάσεων
+    της πυρκαγιάς στις 11/08/2024  
+  y: 0.97  # Y position of the subtitle
+
+# Date of production of the map
+production_date:
+  name: 'Ημερομηνία Παραγωγής: '  # Label for production date
+  x: 1.37  # X position of the production date
+  y: 0.925  # Y position of the production date
+
+# Map information text
+map_information:
+  name: Πληροφορίες Χάρτη  # Title for map information section
+  y_name: 0.31  # Y position of the map information title
+  text1: "Ο χάρτης έχει δημιουργηθεί από την Επιχειρησιακή Μονάδα BEYOND του\nΙΑΑΔΕΤ/ΕΑΑ.
+    O σκοπός του προϊόντος αυτού είναι να δώσει μια εκτίμηση\nτης επιφάνειας των καμένων
+    εκτάσεων της πυρκαγιάς στη\n{place}, "  # First part of map information text
+  text2: | # Second part of map information text
+    που ανιχνεύθηκε στις {detection}
+    από την υπηρεσία ανίχνευσης και παρακολούθησης πυρκαγιών FireHub
+    (http://beyond-eocenter.eu/index.php/web-services/firehub) της
+    Επιχειρησιακής Μονάδας BEYOND (http://beyond-eocenter.eu/) του
+    ΙΑΑΔΕΤ/ΕΑΑ (www.noa.gr).
+  text3: |- # Third part of map information text
+    Η εκτίμηση της καμένης έκτασης, η οποία βασίστηκε σε δορυφορικά
+    δεδομένα πολύ υψηλής ανάλυσης, υπολογίστηκε {area} ha.
+  y_text: 0.23  # Y position of the map information text
+
+# Data sources information
+sources:
+  name: Πηγές Δεδομένων  # Title for sources section
+  y_name: 0.132  # Y position of the sources title
+  product: "Επεξεργασμένες Δορυφορικές Εικόνες PlanetScope πολύ υψηλής χωρικής\nανάλυσης
+    (3m), "  # Description of the product
+  text: | # Additional source details
+    με ημερομηνίες λήψης {download},
+    προσφορά του Κεντρου Αριστείας Eratosthenes
+  y_text: 0.095  # Y position of the sources text
+
+# Information about publication
+publication:
+  name: Δημοσίευση  # Title for publication section
+  y_name: 0.11  # Y position of the publication title
+  text: |- # Publication text
+    Το προϊόν διατίθεται μέσω της ιστοσελίδας του BEYOND στην ακόλουθη
+    διεύθυνση URL: http://beyond-eocenter.eu/index.php/fires
+  y_text: 0.085  # Y position of the publication text
+
+# Team members who worked on the mapping
+team:
+  name: Ομάδα Χαρτογράφησης  # Title for team section
+  y_name: 0.055  # Y position of the team title
+  text: |- # List of team members
+    Νίκος Αναστασίου
+    Ελένη Σακά
+    Ιωάννης Μερκούρης
+    Αλκίνοος Γεωργής
+    Βαλεντίνα Κανάκη
+    Μάρθα Κοκκαλίδου
+    Στέλλα Γκίρτσου
+    Δρ. Χάρης Κοντοές
+  y_text: -0.012  # Y position of the team text
+
+# Contact details
+contact_details:
+  name: Στοιχεία Επικοινωνίας  # Title for contact details section
+  y_name: -0.097  # Y position of the contact title
+  text: |- # Contact information
+    Δρ. Χάρης Κοντοές, Διευθυντής Ερευνών ΕΑΑ
+    E-mail: kontoes@noa.gr
+  y_text: -0.12  # Y position of the contact details text
+
+# Positioning information for the text
+text_position:
+  x: 1.029  # X position of the text
+  y: 0.26  # Y position of the text
+
+# Map display parameters
+map:
+  expansion_factor: 0.1  # Factor for expanding the map
+  expansion_factor2: 5  # Factor for expanding the inset map
+  ysize: 6  # Y size of the map
+  x: 0.645  # X position of the map
+  y: 0.55  # Y position of the map
+  width: 0.4  # Width of the map
+  height: 0.5  # Height of the map

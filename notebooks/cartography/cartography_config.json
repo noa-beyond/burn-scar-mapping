@@ -1,0 +1,104 @@
+{
+    "shapefiles": {
+        "path1": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/penteli/final_burned_varnavas.shp",
+        "epsg1": "EPSG:32634",
+        "path2": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/greece-latest-free-shp/gis_osm_places_free_1.shp",
+        "epsg2": "EPSG:4326"
+    },
+    "dates": {
+        "detection": "11/08/2024 15:15",
+        "download": "07/08/2024 και 13/08/2024"
+    },
+    "area": "9956",
+    "logos": {
+        "north": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/north.png",
+        "x_north": 1.97,
+        "y_north": 0.38,
+        "first": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/AsteroskopoioLogoOuranidon.jpg",
+        "second": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/IAADET.png",
+        "third": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/BEYOND_LOGO.png",
+        "fourth": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/eratosthenes.png",
+        "x": 0.1,
+        "y": 1.05
+    },
+    "images": {
+        "burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/temp/map_burned.png",
+        "cropped_burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/cartography_map_burned_cropped.png",
+        "dpi": 125,
+        "crop_factor": 430
+    },
+    "firehub": {
+        "name": "FireHub",
+        "x": 1.7,
+        "y": 1.06
+    },
+    "ypomnima": {
+        "name": "Υπόμνημα",
+        "y": 0.42,
+        "id_name1": "id",
+        "label1": "Καμένη έκταση",
+        "id_name2": "osm_id",
+        "label2": "Οικισμοί",
+        "xlabel": 0.4,
+        "ylabel": -0.3
+    },
+    "place": {
+        "name": "Βορειοανατολική Αττική",
+        "y": 0.98
+    },
+    "subtitle": {
+        "name": "Εκτίμηση των καμένων εκτάσεων\nτης πυρκαγιάς στις 11/08/2024",
+        "y": 0.97
+    },
+    "production_date": {
+        "name": "Ημερομηνία Παραγωγής: ",
+        "x": 1.37,
+        "y": 0.925
+    },
+    "map_information": {
+        "name": "Πληροφορίες Χάρτη",
+        "y_name": 0.31,
+        "text1": "Ο χάρτης έχει δημιουργηθεί από την Επιχειρησιακή Μονάδα BEYOND του\nΙΑΑΔΕΤ/ΕΑΑ. O σκοπός του προϊόντος αυτού είναι να δώσει μια εκτίμηση\nτης επιφάνειας των καμένων εκτάσεων της πυρκαγιάς στη\n{place}, ",
+        "text2": "που ανιχνεύθηκε στις {detection}\nαπό την υπηρεσία ανίχνευσης και παρακολούθησης πυρκαγιών FireHub\n(http://beyond-eocenter.eu/index.php/web-services/firehub) της\nΕπιχειρησιακής Μονάδας BEYOND (http://beyond-eocenter.eu/) του\nΙΑΑΔΕΤ/ΕΑΑ (www.noa.gr).\n",
+        "text3": "Η εκτίμηση της καμένης έκτασης, η οποία βασίστηκε σε δορυφορικά\nδεδομένα πολύ υψηλής ανάλυσης, υπολογίστηκε {area} ha.",
+        "y_text": 0.232
+    },
+    "sources": {
+        "name": "Πηγές Δεδομένων",
+        "y_name": 0.15,
+        "product": "Επεξεργασμένες Δορυφορικές Εικόνες PlanetScope πολύ υψηλής χωρικής\nανάλυσης (3m), ",
+        "text": "με ημερομηνίες λήψης {download},\nπροσφορά του Κεντρου Αριστείας Eratosthenes\n",
+        "y_text": 0.115
+    },
+    "publication": {
+        "name": "Δημοσίευση",
+        "y_name": 0.11,
+        "text": "Το προϊόν διατίθεται μέσω της ιστοσελίδας του BEYOND στην ακόλουθη\nδιεύθυνση URL: http://beyond-eocenter.eu/index.php/fires",
+        "y_text": 0.085
+    },
+    "team": {
+        "name": "Ομάδα Χαρτογράφησης",
+        "y_name": 0.085,
+        "text": "Νίκος Αναστασίου\nΕλένη Σακά\nΙωάννης Μερκούρης\nΑλκίνοος Γεωργής\nΒαλεντίνα Κανάκη\nΜάρθα Κοκκαλίδου\nΣτέλλα Γκίρτσου\nΔρ. Χάρης Κοντοές",
+        "y_text": 0.02
+    },
+    "contact_details": {
+        "name": "Στοιχεία Επικοινωνίας",
+        "y_name": -0.05,
+        "text": "Δρ. Χάρης Κοντοές, Διευθυντής Ερευνών ΕΑΑ\nE-mail: kontoes@noa.gr",
+        "y_text": -0.075
+    },
+    "text_position": {
+        "x": 1.029,
+        "y": 0.26
+    },
+    "map": {
+        "expansion_factor": 0.1,
+        "expansion_factor2": 5,
+        "ysize": 6,
+        "x": 0.645,
+        "y": 0.55,
+        "width": 0.4,
+        "height": 0.5
+    }
+}
