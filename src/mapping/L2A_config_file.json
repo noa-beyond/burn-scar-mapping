@@ -1,0 +1,24 @@
+{
+    "sentinelhub": {
+      "client_id": "sh-dce21bb4-8cfb-48df-8f32-8c655d0a83f1",
+      "client_secret": "6ZiLKeRpeyTNfrovxYLVgnMN7qj0HUv1",
+      "username": "alexantrasaka@gmail.com",
+      "password": "Skelen9802!_"
+    },
+
+    "process_info": {
+      "start_date": "2024-07-22", 
+      "fire_date": "2024-07-29", 
+      "end_date": "2024-08-18",  
+      "fire_duration": 1, 
+      "lat": 38.3927,
+      "lon": 24.1583
+    },
+
+    "user_variables": {
+      "cloud_coverage_threshold": 10, 
+      "mask_threshold": 0.2   
+    },
+    
+    "debug": true 
+  }
