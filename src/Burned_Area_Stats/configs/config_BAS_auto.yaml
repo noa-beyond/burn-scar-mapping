@@ -1,0 +1,21 @@
+BurnedAreas_PATH:          C:/BurnedAreaStats/input/
+OutputFolder_PATH:         C:/BurnedAreaStats/output/
+
+CorineLandCover_PATH:      C:/BurnedAreaStats/data/CORINE2018/CLC_2018_SHP_GR+CY.shp
+CorineLandCover_JSON_PATH: ./configs/CLC2018_categories_eng.json
+CorineLandCover_COLUMN:    code_18
+
+BSM_PATH:                  C:/BurnedAreaStats/data/BSM_1984-2022/bsm_1984_2022.shp
+BSM_COLUMN:                year
+
+BSM_2023_PATH:             C:/BurnedAreaStats/data/BSM2023/BSM_1_1_2023_30_9_2023_TELIKO.shp
+BSM_2023_COLUMN:           Id_1
+
+Natura2000_PATH:           C:/BurnedAreaStats/data/Natura2000/natura2000.shp
+Natura2000_COLUMN:         SITETYPE
+
+Oikismoi_PATH:             C:/BurnedAreaStats/data/oikismoi/oikismoi.shp
+Oikismoi_COLUMN:           CODE_OIK
+
+Periferies_PATH:           C:/BurnedAreaStats/data/periphereies/periphereies.shp
+Periferies_COLUMN:         PER

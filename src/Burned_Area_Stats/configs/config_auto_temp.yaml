@@ -1,0 +1,7 @@
+BurnedAreas_PATH:          C:/BurnedAreaStats/input/
+OutputFolder_PATH:         C:/BurnedAreaStats/output/
+
+
+BSM_PATH:                  C:/BurnedAreaStats/data/BSM_1984-2022/bsm_1984_2022.shp
+BSM_COLUMN:                year
+
