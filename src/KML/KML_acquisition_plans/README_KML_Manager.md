@@ -8,7 +8,7 @@ This repository contains scripts to manage the download, organization, and updat
 - Sort KML files
 
 ## Requirements 
-- install **requirements.txt**
+- install **requirements_KML_Manager.txt**
 
 ## Files
 ### **1.** test_kml_manager_class.py

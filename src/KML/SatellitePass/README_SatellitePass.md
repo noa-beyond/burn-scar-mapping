@@ -9,7 +9,7 @@ The Satellite Pass Prediction project consists of two main components: a class d
 - Retrieves observation information for the specified location
 
 ## Requirements
-- install **requirements.txt**
+- install **requirements_SatellitePass.txt**
 
 ## Files
 ### **1.** SatellitePassPrediction_class.py
