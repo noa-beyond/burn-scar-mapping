@@ -8,6 +8,8 @@ The Satellite Pass Prediction project consists of two main components: a class d
 - Generates a GeoDataFrame
 - Retrieves observation information for the specified location
 
+## Requirements
+- install **requirements.txt**
 
 ## Files
 ### **1.** SatellitePassPrediction_class.py
@@ -41,7 +43,7 @@ This script serves as the main entry point for processing satellite pass data. I
 - The script then prints out details of any satellite observation polygons that contain the specified point.
 
 ## Configuration
-The script reads settings from a JSON configuration file (config_SatellitePass.json). The configuration file should contain the following keys:
+The script reads settings from a JSON configuration file. The default path for this file is burn-scar-mapping\src\configs\config_SatellitePass.json. The configuration file should contain the following keys:
 - latitude: Latitude of the observation point.
 - longitude: Longitude of the observation point.
 - base_kml_directory: Path to the directory containing KML files.
@@ -56,4 +58,4 @@ The script reads settings from a JSON configuration file (config_SatellitePass.j
 ```
 
 ## How to Use
-check this notebook (requirements.txt)
+check this notebook ()
