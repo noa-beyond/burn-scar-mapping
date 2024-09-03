@@ -57,8 +57,8 @@ The class _L1C_Proseccor.py_ has a number of operations which are responsible fo
 
 ### **Example of the configuration file** 
 
-![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Configuration_File.png)    
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/images/Configuration_File.png)    
 
 ### **Example Jupyter Notebook** 
 
-![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Run_Jupyter_L1C.png) 
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/images/Run_Jupyter_L1C.png) 
