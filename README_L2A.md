@@ -58,8 +58,8 @@ The class _L2A_Proseccor.py_ has a number of operations which are responsible fo
 
 ### **Example of the configuration file** 
 
-![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Configuration_File.png)    
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/images/Configuration_File.png)    
 
 ### **Example Jupyter Notebook** 
 
-![Configuration](https://github.com/noa-beyond/burn-scar-mapping/blob/eleni/Run_Jupyter_L2A.png) 
+![Configuration](https://github.com/noa-beyond/burn-scar-mapping/images/Run_Jupyter_L2A.png) 
