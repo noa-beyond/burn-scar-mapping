@@ -29,7 +29,7 @@ from datetime import datetime
 # shapefile.head()
 
 def create_map(config_file):
-    # Load the configuration from the JSON file
+    # Load the configuration from the YAML file
     with open(config_file, 'r', encoding='utf-8') as f:
         config = yaml.safe_load(f)
 
@@ -126,20 +126,20 @@ def create_map(config_file):
     inset_ax.set_ylabel('')
 
     #Add title
-    plt.text(config['firehub']['x'], config['firehub']['y'], config['firehub']['name'], transform=ax.transAxes, rotation=0, va='top', fontweight='bold', fontsize=20, color='red') #adjust for position of FireHub
+    plt.text(config['firehub']['x'], config['firehub']['y'], config['firehub']['name'], transform=ax.transAxes, rotation=0, va='top', fontweight='bold', fontsize=20, color='red')
 
     xtext = config['text_position']['x']
     ytext = config['text_position']['y']
 
     # Add legend
-    plt.text(xtext, ytext + config['ypomnima']['y'], config['ypomnima']['name'], transform=ax.transAxes, rotation=0, ha='left', va='baseline', fontweight='bold', fontsize=10) #adjust for position of "Υπόμνημα"
+    plt.text(xtext, ytext + config['ypomnima']['y'], config['ypomnima']['name'], transform=ax.transAxes, rotation=0, ha='left', va='baseline', fontweight='bold', fontsize=10)
     bbox_gdf.plot(ax=ax, edgecolor='red', facecolor='red', alpha=0, legend=True) 
     plt.plot(shapefile1[config['ypomnima']['id_name1']], label=config['ypomnima']['label1'])
     plt.plot(bounded_shapefile2[config['ypomnima']['id_name2']], label=config['ypomnima']['label2'])
     fire = mpatches.Patch(edgecolor='red', facecolor='none', alpha=0.5, hatch='/////', label=config['ypomnima']['label1'])
     settlement = Line2D([0], [0], marker='o', color='w', label=config['ypomnima']['label2'], markerfacecolor='white', markeredgecolor='black', markersize=10, alpha=0.5)
-    legend = plt.legend(loc='right', title_fontproperties=fm.FontProperties(weight='bold'), bbox_to_anchor=(config['ypomnima']['xlabel'], config['ypomnima']['ylabel']), borderaxespad=0, frameon=False, handles=[settlement, fire]) #adjust for position of ypomnima values
-
+    plt.legend(loc='right', title_fontproperties=fm.FontProperties(weight='bold'), bbox_to_anchor=(config['ypomnima']['xlabel'], config['ypomnima']['ylabel']), borderaxespad=0, frameon=False, handles=[settlement, fire])
+    
     # Get the current date
     today = datetime.today().date()
     today = today.strftime("%d/%m/%Y")

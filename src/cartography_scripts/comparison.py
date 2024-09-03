@@ -50,7 +50,6 @@ def create_map(config_file):
     x_min, y_min, x_max, y_max = shapefile1.total_bounds
     width = x_max - x_min
     height = y_max - y_min
-    avg_latitude = (y_min + y_max) / 2
 
     # Optionally adjust the bounding box size
     expansion_factor = config['map']['expansion_factor']
@@ -69,9 +68,6 @@ def create_map(config_file):
 
     # Create the plot
     fig, ax = plt.subplots(figsize=(10, 10))
-    dpi = fig.dpi  # Get the DPI setting
-    figure_width_in_inches = fig.get_size_inches()[0]  # Get the width of the figure in inches
-    map_width_pixels = figure_width_in_inches * dpi  # Calculate the width in pixels
     bounded_shapefile1.plot(ax=ax, edgecolor='red', facecolor='none', alpha=0.5, hatch='|||||', legend=True)
     bounded_shapefile2.plot(ax=ax, edgecolor='black', facecolor='white', markersize=50, alpha=1, marker='o', legend=True)
     shapefile3.plot(ax=ax, edgecolor='yellow', facecolor='none', alpha=0.5, hatch='/////', legend=True)
@@ -134,14 +130,14 @@ def create_map(config_file):
     inset_ax.set_xlabel('')
     inset_ax.set_ylabel('')
 
-    #Add title
-    plt.text(config['firehub']['x'], config['firehub']['y'], config['firehub']['name'], transform=ax.transAxes, rotation=0, va='top', fontweight='bold', fontsize=20, color='red') #adjust for position of FireHub
+    # Add title
+    plt.text(config['firehub']['x'], config['firehub']['y'], config['firehub']['name'], transform=ax.transAxes, rotation=0, va='top', fontweight='bold', fontsize=20, color='red')
 
     xtext = config['text_position']['x']
     ytext = config['text_position']['y']
 
     # Add legend
-    plt.text(xtext, ytext + config['ypomnima']['y'], config['ypomnima']['name'], transform=ax.transAxes, rotation=0, ha='left', va='baseline', fontweight='bold', fontsize=10) #adjust for position of "Υπόμνημα"
+    plt.text(xtext, ytext + config['ypomnima']['y'], config['ypomnima']['name'], transform=ax.transAxes, rotation=0, ha='left', va='baseline', fontweight='bold', fontsize=10) 
     bbox_gdf.plot(ax=ax, edgecolor='red', facecolor='red', alpha=0, legend=True) 
     plt.plot(bounded_shapefile1[config['ypomnima']['id_name1']], label=config['ypomnima']['label1'])
     plt.plot(bounded_shapefile2[config['ypomnima']['id_name2']], label=config['ypomnima']['label2'])
@@ -149,7 +145,7 @@ def create_map(config_file):
     fire = mpatches.Patch(edgecolor='red', facecolor='none', alpha=0.5, hatch='/////', label=config['ypomnima']['label1'])
     settlement = Line2D([0], [0], marker='o', color='w', label=config['ypomnima']['label2'], markerfacecolor='white', markeredgecolor='black', markersize=10, alpha=0.5)
     previous_fire = mpatches.Patch(edgecolor='yellow', facecolor='none', alpha=0.5, hatch='|||||', label=config['ypomnima']['label3'])
-    legend = plt.legend(loc='right', title_fontproperties=fm.FontProperties(weight='bold'), bbox_to_anchor=(config['ypomnima']['xlabel'], config['ypomnima']['ylabel']), borderaxespad=0, frameon=False, handles=[settlement, fire, previous_fire]) #adjust for position of ypomnima values
+    plt.legend(loc='right', title_fontproperties=fm.FontProperties(weight='bold'), bbox_to_anchor=(config['ypomnima']['xlabel'], config['ypomnima']['ylabel']), borderaxespad=0, frameon=False, handles=[settlement, fire, previous_fire])
 
     # Get the current date
     today = datetime.today().date()
