@@ -9,7 +9,7 @@ from src.KML.SatellitePass.SatellitePass_Main import SatellitePass_Main as Satel
 if __name__ == "__main__":
     # Generate a timestamped log file name
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-    log_filename = f'burn-scar-mapping/src/KML/KML_acquisition_plans/log_archive/test_kml_main{timestamp}.log'
+    log_filename = f'src/KML/KML_acquisition_plans/log_archive/test_kml_main{timestamp}.log'
     
     # Set up logging to append to the existing log file instead of overwriting it
     logging.basicConfig(
@@ -22,13 +22,13 @@ if __name__ == "__main__":
     logging.info("Starting the scheduled task...")
 
     # Path to the configuration file
-    config_file_path = 'burn-scar-mapping/configs/config_KML_directories.json'
+    config_file_path = 'configs/config_KML_directories.json'
     
     # Run the job
     job(config_file_path)
 
     # Path to the configuration file
-    config_file_path = 'burn-scar-mapping/configs/config_SatellitePass.json'
+    config_file_path = 'configs/config_SatellitePass.json'
     
     # Run SatellitePass_Main
     SatellitePass_Main(config_file_path)

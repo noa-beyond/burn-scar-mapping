@@ -39,9 +39,9 @@ The script reads the directory paths from a JSON configuration file. The default
 ### Sample Configuration (config_KML_directories.json)
 ```
 {
-    "base_directory": "burn-scar-mapping/src/KML/KML_acquisition_plans/update",
-    "s2a_directory": "burn-scar-mapping/src/KML/KML_acquisition_plans/S2A",
-    "s2b_directory": "burn-scar-mapping/src/KML/KML_acquisition_plans/S2B"
+    "base_directory": "src/KML/KML_acquisition_plans/update",
+    "s2a_directory": "src/KML/KML_acquisition_plans/S2A",
+    "s2b_directory": "src/KML/KML_acquisition_plans/S2B"
 }
 ```
 
