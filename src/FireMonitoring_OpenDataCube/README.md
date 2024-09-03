@@ -12,7 +12,7 @@
 
 ## How to Use
 - Open BurnedAreaBox.json and paste your AOI box that you copy from Sentinel Data Space
-- Open **configs/config.yaml** input start_DATE and end_DATE for searching, cloudCover and EPSG for output raster(s)
+- Open **burn-scar-mapping/configs/config.yaml** input start_DATE and end_DATE for searching, cloudCover and EPSG for output raster(s)
 - Run **main.py**
 
 ### Use it with Objects
