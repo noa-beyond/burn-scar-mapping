@@ -1,0 +1,6 @@
+auto_mix_prep==0.2.0
+autoroot==1.0.1
+geopandas==0.14.2
+lxml==5.2.2
+pykml==0.2.0
+Shapely==2.0.6
