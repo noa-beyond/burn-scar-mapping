@@ -14,11 +14,9 @@ if __name__ == "__main__":
     bunred_raster = 'C:/Praktiki/clean_raster/DNBR_XIOS_022.tif'
     roads = gp.read_file('C:/BurnedAreaStats/demo_data/BurnedAreaRoads_clipped/roads_clipped_burned_area.shp')
 
-
     with rio.open(bunred_raster) as src:
         raster = src.read(1)
         raster_meta = src.meta
-
 
     buffer_sizes = {
         'secondary': 0.3,
@@ -29,7 +27,6 @@ if __name__ == "__main__":
     
     roads['geometry'] = roads.apply(apply_buffer, axis=1)
 
-    
     mask = rasterize(
         roads['geometry'],
         out_shape=raster.shape,
@@ -37,7 +34,6 @@ if __name__ == "__main__":
         all_touched=True,
         dtype='uint8'
     )
-
     new_value = 0 
     new_raster = raster.copy()
     new_raster[mask == 1] = new_value
