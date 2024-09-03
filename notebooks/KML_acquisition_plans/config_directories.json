@@ -1,0 +1,5 @@
+{
+    "base_directory": "burn-scar-mapping/notebooks/KML_acquisition_plans/update",
+    "s2a_directory": "burn-scar-mapping/notebooks/KML_acquisition_plans/S2A",
+    "s2b_directory": "burn-scar-mapping/notebooks/KML_acquisition_plans/S2B"
+}
