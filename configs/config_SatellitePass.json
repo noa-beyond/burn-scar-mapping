@@ -1,5 +1,5 @@
 {
-    "base_kml_directory": "burn-scar-mapping/src/KML/KML_acquisition_plans/update",
+    "base_kml_directory": "src/KML/KML_acquisition_plans/update",
     "latitude": "37.95",
     "longitude": "23.70"
 }

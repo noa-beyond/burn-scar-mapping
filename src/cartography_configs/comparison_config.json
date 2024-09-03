@@ -1,0 +1,106 @@
+{
+    "shapefiles": {
+        "path1": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/penteli/final_burned_varnavas.shp",
+        "epsg1": "EPSG:32634",
+        "path2": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/greece-latest-free-shp/gis_osm_places_free_1.shp",
+        "epsg2": "EPSG:4326",
+        "path3": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/shapefiles/BSM_2009_Attiki/BSM_2009_Attiki.shp",
+        "epsg3": "EPSG:4326"
+    },
+    "dates": {
+        "detection": "11/08/2024 15:15",
+        "download": "07/08/2024 και 13/08/2024"
+    },
+    "area": "9956",
+    "product": "Επεξεργασμένες Δορυφορικές Εικόνες PlanetScope πολύ υψηλής χωρικής\nανάλυσης (3m)",
+    "logos": {
+        "north": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/north.png",
+        "x_north": 1.75,
+        "y_north": 0.41,
+        "first": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/AsteroskopoioLogoOuranidon.jpg",
+        "second": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/IAADET.png",
+        "third": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/BEYOND_LOGO.png",
+        "fourth": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/eratosthenes.png",
+        "x": 0.1,
+        "y": 1.05
+    },
+    "images": {
+        "burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/temp/map_burned.png",
+        "cropped_burned_map": "C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/for_coding/cartographies/comparison_map_burned_cropped.png",
+        "dpi": 150,
+        "crop_factor": 500
+    },
+    "firehub": {
+        "name": "FireHub",
+        "x": 1.54,
+        "y": 1.06
+    },
+    "ypomnima": {
+        "name": "Υπόμνημα",
+        "y": 0.45,
+        "id_name1": "id",
+        "label1": "Καμένη έκταση 2024, 9956 ha",
+        "id_name2": "osm_id",
+        "label2": "Οικισμοί",
+        "id_name3": "id",
+        "label3": "Καμένη έκταση 2009, 13043 ha",
+        "xlabel": 0.7,
+        "ylabel": -0.34
+    },
+    "place": {
+        "name": "Βορειοανατολική Αττική",
+        "y": 0.98
+    },
+    "subtitle": {
+        "name": "Απεικόνιση πυρκαγιών 2009-2024",
+        "y": 0.97
+    },
+    "production_date": {
+        "name": "Ημερομηνία Παραγωγής: ",
+        "x": 1.285,
+        "y": 0.93
+    },
+    "map_information": {
+        "name": "Πληροφορίες Χάρτη",
+        "y_name": 0.31,
+        "text": "Ο χάρτης έχει δημιουργηθεί από το Κέντρο Αριστείας BEYOND του\nΙΑΑΔΕΤ/ΕΑΑ. O σκοπός του προϊόντος αυτού είναι να δώσει μια\nσύγκρίση της επιφάνειας των καμένων εκτάσεων των πυρκαγιών στη\n{place}, το 2009 και το 2024, όπου ανιχνεύτηκε από\nτην υπηρεσία ανίχνευσης και παρακολούθησης πυρκαγιών FireHub\n(http://beyond-eocenter.eu/index.php/web-services/firehub) του Κέντρου\nΕπιστημών Παρατήρησης της Γης και Δορυφορικής Τηλεπισκόπησης\nBEYOND (http://beyond-eocenter.eu/) του ΙΑΑΔΕΤ/ΕΑΑ (www.noa.gr).\n",
+        "y_text": 0.244
+    },
+    "sources": {
+        "name": "Πηγές Δεδομένων",
+        "y_name": 0.175,
+        "text": "Επεξεργασμένες Δορυφορικές Εικόνες.",
+        "y_text": 0.16
+    },
+    "publication": {
+        "name": "Δημοσίευση",
+        "y_name": 0.133,
+        "text": "Το προϊόν διατίθεται μέσω της ιστοσελίδας του BEYOND στην ακόλουθη\nδιεύθυνση URL: http://beyond-eocenter.eu/index.php/fires",
+        "y_text": 0.111
+    },
+    "team": {
+        "name": "Ομάδα Χαρτογράφησης",
+        "y_name": 0.079,
+        "text": "Νίκος Αναστασίου\nΕλένη Σακά\nΙωάννης Μερκούρης\nΑλκίνοος Γεωργής\nΒαλεντίνα Κανάκη\nΜάρθα Κοκκαλίδου\nΣτέλλα Γκίρτσου\nΔρ. Χάρης Κοντοές",
+        "y_text": 0.017
+    },
+    "contact_details": {
+        "name": "Στοιχεία Επικοινωνίας",
+        "y_name": -0.054,
+        "text": "Δρ. Χάρης Κοντοές, Διευθυντής Ερευνών ΕΑΑ\nE-mail: kontoes@noa.gr",
+        "y_text": -0.077
+    },
+    "text_position": {
+        "x": 1.029,
+        "y": 0.23
+    },
+    "map": {
+        "expansion_factor": 0.1,
+        "expansion_factor2": 5,
+        "ysize": 6,
+        "x": 0.74,
+        "y": 0.55,
+        "width": 0.4,
+        "height": 0.5
+    }
+}

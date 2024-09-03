@@ -51,7 +51,7 @@ The script reads settings from a JSON configuration file. The default path for t
 ### Sample Configuration (config_SatellitePass.json:)
 ```
 {
-    "base_kml_directory": "burn-scar-mapping/src/KML/KML_acquisition_plans/update",
+    "base_kml_directory": "src/KML/KML_acquisition_plans/update",
     "latitude": "37.95",
     "longitude": "23.70"
 }
@@ -83,13 +83,13 @@ The script reads settings from a JSON configuration file. The default path for t
         logging.info("Starting the scheduled task...")
 
         # Path to the configuration file
-        config_file_path = 'burn-scar-mapping/configs/config_KML_directories.json'
+        config_file_path = 'configs/config_KML_directories.json'
         
         # Run the job
         job(config_file_path)
 
         # Path to the configuration file
-        config_file_path = 'burn-scar-mapping/configs/config_SatellitePass.json'
+        config_file_path = 'configs/config_SatellitePass.json'
         
         # Run SatellitePass_Main
         SatellitePass_Main(config_file_path)
