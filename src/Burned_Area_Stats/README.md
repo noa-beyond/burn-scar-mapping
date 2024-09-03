@@ -14,16 +14,16 @@ pandas==2.2.2, PyYAML==6.0.1, Shapely==2.0.6
 
 
 ## How to Use (Auto Version)
-**1.** Put all shapefiles from Burned Areas inside a folder and specify the path into **configs/config.yaml** in "BurnedAreas_PATH" <br />
-**2.** Put all shapefiles paths to be used for statistics into **configs/config.yaml**, example --> << shapefile_name_PATH >> <br />
-**3.** Put the column to be used for dissolve in the **configs/config.yaml**, example --> << shapefile_name_COLUMN >> <br />
+**1.** Put all shapefiles from Burned Areas inside a folder and specify the path into **burn-scar-mapping/configs/config_BAS.yaml** in "BurnedAreas_PATH" <br />
+**2.** Put all shapefiles paths to be used for statistics into **burn-scar-mapping/configs/config.yaml**, example --> << shapefile_name_PATH >> <br />
+**3.** Put the column to be used for dissolve in the **burn-scar-mapping/configs/config.yaml**, example --> << shapefile_name_COLUMN >> <br />
 if unknown put 'None' in the config (not recomented) <br />
-**4.** Create an output folder (or it will be created automaticaly) and specify the path into **configs/config.yaml** in "OutputFolder_PATH" <br />
+**4.** Create an output folder (or it will be created automaticaly) and specify the path into **burn-scar-mapping/configs/config.yaml** in "OutputFolder_PATH" <br />
 **5.** Run **main_fullyauto.py** <br />
 - The above steps will genarate stats for the Burned Area(s) from the shapefiles specified in config.yaml
 
 ## How to Use (Manual Version)
-**1.** Put all shapefile(s) paths into **configs/config.yaml**, example --> << shapefile_name_PATH >> <br />
+**1.** Put all shapefile(s) paths into **burn-scar-mapping/configs/config.yaml**, example --> << shapefile_name_PATH >> <br />
 **2.** Edit **main.py**, add : <br />
 - Add new GeoDataFrame <br />
 ```new_shapefile_GeoDataFrame = gp.read_file(shapefile_path)``` <br /><br />

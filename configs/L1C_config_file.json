@@ -1,24 +1,26 @@
 {
-    "sentinelhub": {
-      "client_id": "sh-dce21bb4-8cfb-48df-8f32-8c655d0a83f1",
-      "client_secret": "6ZiLKeRpeyTNfrovxYLVgnMN7qj0HUv1",
-      "username": "alexantrasaka@gmail.com",
-      "password": "Skelen9802!_"
-    },
+  "save_path": "burn-scar-mapping\\src\\mapping\\Images_Save",
 
-    "process_info": {
-      "start_date": "2024-07-10", 
-      "fire_date": "2024-07-19", 
-      "end_date": "2024-08-12",
-      "fire_duration": 1,   
-      "lat": 41.3748,
-      "lon": 23.5905
-    },
+  "sentinelhub": {
+    "client_id": "sh-dce21bb4-8cfb-48df-8f32-8c655d0a83f1",
+    "client_secret": "6ZiLKeRpeyTNfrovxYLVgnMN7qj0HUv1",
+    "username": "alexantrasaka@gmail.com",
+    "password": "Skelen9802!_"
+  },
 
-    "user_variables": {
-      "cloud_coverage_threshold": 10, 
-      "mask_threshold": 0.09   
-    },
-    
-    "debug": true 
-  }
+  "process_info": {
+    "start_date": "2024-07-22", 
+    "fire_date": "2024-07-29", 
+    "end_date": "2024-08-18",  
+    "fire_duration": 1, 
+    "lat": 38.3927,
+    "lon": 24.1583
+  },
+
+  "user_variables": {
+    "cloud_coverage_threshold": 10, 
+    "mask_threshold": 0.2   
+  },
+  
+  "debug": true 
+}

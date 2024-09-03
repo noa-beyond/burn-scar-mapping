@@ -15,9 +15,10 @@ import rioxarray
 import subprocess
 import shutil 
 from L2A_Downloader import Downloader
+from addon_for_mapping import RoadsMasker
 
 class Processor:
-    def __init__(self, downloader, cloud_coverage_threshold, mask_threshold):
+    def __init__(self, downloader,cloud_coverage_threshold, mask_threshold):
         self.downloader = downloader
         self.cloud_coverage_threshold = cloud_coverage_threshold
         self.mask_threshold = mask_threshold
@@ -54,8 +55,13 @@ class Processor:
             result = result.squeeze()
             result = xr.DataArray(result.values, coords={'x': result['x'], 'y': result['y']}, dims=['y', 'x']).to_dataset(name='burned')
             result.to_netcdf(os.path.join(output_dir, 'burned.nc'))
-            gdal_script = 'D:/programs/installed_in_D/anaconda3/envs/environment_V_p_3_10/Lib/site-packages/GDAL-3.9.1-py3.10-win-amd64.egg-info/scripts/gdal_polygonize.py'
-            gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.nc')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
+            #result.rio.to_raster(os.path.join(output_dir, 'burned.tif'))
+            roadmasker = RoadsMasker(result, "D:\\Praktiki\\OSM_Roads\\gis_osm_roads_free_1.shp", output_dir)
+            roadmask_dir = roadmasker.mask_roads()
+            gdal_script = 'D:\\programs\\installed_in_D\\anaconda3\\envs\\environment_V_p_3_10\\Scripts\\gdal_polygonize.py'
+            #gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.tif')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
+            gdal_command = f"python {gdal_script} {roadmask_dir} -b 1 {os.path.join(output_dir, 'burned.shp')}"
+            #gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.nc')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
             os.system(gdal_command)
             polygon = gpd.read_file(os.path.join(output_dir,'burned.shp'))
             polygon = polygon.set_crs(4326)
@@ -63,6 +69,7 @@ class Processor:
             polygon = polygon.assign(area=polygon.area)
             print('Total Burned area: ',polygon.area.sum()/10000)
             polygon = polygon[polygon.area>25000]
+            polygon_buffer = polygon.dissolve()
             polygon_buffer = polygon.buffer(40, join_style=1).buffer(-40.0, join_style=1)
             polygon_buffer = polygon_buffer.simplify(tolerance=5)
             polygon_buffer.to_file((os.path.join(output_dir,'burned_smoothed_buffer40_simplify5.shp')))
