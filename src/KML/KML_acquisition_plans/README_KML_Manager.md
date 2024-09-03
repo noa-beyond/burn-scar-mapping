@@ -8,7 +8,7 @@ This repository contains scripts to manage the download, organization, and updat
 - Sort KML files
 
 ## Requirements 
-- install **requirements.txt**
+- install **requirements_KML_Manager.txt**
 
 ## Files
 ### **1.** test_kml_manager_class.py
@@ -34,9 +34,9 @@ This script runs the KML management process, logging its activities and handling
 - **Job Execution:** Calls the delete_kml_in_UpdateFile(), download_kml(), and update_local_dataset() methods of the KMLManager class to perform the task.
 
 ## Configuration
-The script reads the directory paths from a JSON configuration file. The default path for this file is burn-scar-mapping/src/configs/config_directories.json. If the file is missing or an error occurs while reading it, the script uses default directory names: update (base), S2A and S2B.
+The script reads the directory paths from a JSON configuration file. The default path for this file is burn-scar-mapping\configs\config_KML_directories.json. If the file is missing or an error occurs while reading it, the script uses default directory names: update (base), S2A and S2B.
 
-### Sample Configuration (config_directories.json)
+### Sample Configuration (config_KML_directories.json)
 ```
 {
     "base_directory": "burn-scar-mapping/src/KML/KML_acquisition_plans/update",

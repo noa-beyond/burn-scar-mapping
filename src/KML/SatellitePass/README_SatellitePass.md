@@ -9,7 +9,7 @@ The Satellite Pass Prediction project consists of two main components: a class d
 - Retrieves observation information for the specified location
 
 ## Requirements
-- install **requirements.txt**
+- install **requirements_SatellitePass.txt**
 
 ## Files
 ### **1.** SatellitePassPrediction_class.py
@@ -43,7 +43,7 @@ This script serves as the main entry point for processing satellite pass data. I
 - The script then prints out details of any satellite observation polygons that contain the specified point.
 
 ## Configuration
-The script reads settings from a JSON configuration file. The default path for this file is burn-scar-mapping\src\configs\config_SatellitePass.json. The configuration file should contain the following keys:
+The script reads settings from a JSON configuration file. The default path for this file is burn-scar-mapping\configs\config_SatellitePass.json. The configuration file should contain the following keys:
 - latitude: Latitude of the observation point.
 - longitude: Longitude of the observation point.
 - base_kml_directory: Path to the directory containing KML files.
@@ -51,7 +51,7 @@ The script reads settings from a JSON configuration file. The default path for t
 ### Sample Configuration (config_SatellitePass.json:)
 ```
 {
-    "base_kml_directory": "burn-scar-mapping/notebooks/KML_acquisition_plans/update",
+    "base_kml_directory": "burn-scar-mapping/src/KML/KML_acquisition_plans/update",
     "latitude": "37.95",
     "longitude": "23.70"
 }
