@@ -55,7 +55,7 @@ if __name__ == "__main__":
     logging.info("Starting the scheduled task...")
 
     # Path to the configuration file
-    config_file_path = 'burn-scar-mapping/src/configs/config_directories.json'
+    config_file_path = 'configs/KML/config_KML_directories.json'
 
     # Run the job
     job(config_file_path)

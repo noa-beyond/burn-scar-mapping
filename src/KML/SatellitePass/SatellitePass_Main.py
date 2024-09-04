@@ -55,7 +55,7 @@ def SatellitePass_Main(config_file_path: str = 'config_SatellitePass.json'):
 
 if __name__ == "__main__":
     # Path to the configuration file
-    config_file_path = 'burn-scar-mapping/src/configs/config_SatellitePass.json'
+    config_file_path = 'configs/KML/config_SatellitePass.json'
 
     # Run SatellitePass_Main
     SatellitePass_Main(config_file_path)

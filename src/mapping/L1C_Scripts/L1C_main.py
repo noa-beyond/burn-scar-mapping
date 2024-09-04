@@ -11,9 +11,11 @@ def load_config(config_path):
     return config
 
 # TODO AMA DEN DINEI START DATE END DATE O XRISTIS
-def main(config_path= "config_file.json", save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save'):
+def main(config_path):
     config = load_config(config_path)
+
     # Accessing the values from the config
+    save_path = config.get("save_path")
     client_id = config['sentinelhub']['client_id']
     client_secret = config['sentinelhub']['client_secret']
     username = config['sentinelhub']['username']
@@ -47,4 +49,4 @@ def main(config_path= "config_file.json", save_path = 'D:/Praktiki/burned-scar-m
     logging.info(f"Processed data saved to: {processed_dir}")
 
 if __name__ == "__main__":
-    main(config_path= "burn-scar-mapping/configs/L1C_config_file.json", save_path = 'D:/Praktiki/burned-scar-mapping/burn-scar-mapping/src/mapping/Images_Save')
+    main(config_path= "configs/Mapping/L1C_config_file.json")

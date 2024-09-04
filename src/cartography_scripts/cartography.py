@@ -216,4 +216,4 @@ def create_map(config_file):
     # Optionally, show the cropped image
     cropped_image.show()
 
-create_map('cartography_configs/cartography_config.yaml')
+create_map('configs/Cartography/cartography_config.yaml')

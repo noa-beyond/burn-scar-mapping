@@ -22,13 +22,13 @@ product: |-
 
 # Paths to logos and their positions in the output
 logos:
-  north: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/north.png
+  north: src/logos/north.png
   x_north: 1.75  # X position of the north arrow logo
   y_north: 0.41  # Y position of the north arrow logo
-  first: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/AsteroskopoioLogoOuranidon.jpg
-  second: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/IAADET.png
-  third: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/BEYOND_LOGO.png
-  fourth: C:/Users/alkki/Desktop/Σχολή/Πρακτική Τρίμηνο/burned-scar-mapping/burn-scar-mapping/src/logos/eratosthenes.png
+  first: src/logos/AsteroskopoioLogoOuranidon.jpg
+  second: src/logos/IAADET.png
+  third: src/logos/BEYOND_LOGO.png
+  fourth: src/logos/eratosthenes.png
   x: 0.1  # X position of the logos
   y: 1.05  # Y position of the logos
 

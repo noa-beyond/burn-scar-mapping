@@ -2,7 +2,7 @@ BurnedAreas_PATH:          C:/BurnedAreaStats/input/
 OutputFolder_PATH:         C:/BurnedAreaStats/output/
 
 CorineLandCover_PATH:      C:/BurnedAreaStats/data/CORINE2018/CLC_2018_SHP_GR+CY.shp
-CorineLandCover_JSON_PATH: ./CLC2018_categories_eng.json
+CorineLandCover_JSON_PATH: configs/Burned_Area_Stats/CLC2018_categories_eng.json
 CorineLandCover_COLUMN:    code_18
 
 BSM_PATH:                  C:/BurnedAreaStats/data/BSM_1984-2022/bsm_1984_2022.shp

@@ -48,4 +48,4 @@ def main(config_path):
     logging.info(f"Processed data saved to: {processed_dir}")
 
 if __name__ == "__main__":
-    main(config_path= "configs/L2A_config_file.json")
+    main(config_path= "configs/Mapping/L2A_config_file.json")

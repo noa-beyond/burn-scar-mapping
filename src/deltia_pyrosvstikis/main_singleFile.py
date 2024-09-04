@@ -7,7 +7,7 @@ import os
 
 if __name__ == "__main__":
 
-    with open('burn-scar-mapping/configs/config_deltia_singleFile.yaml', encoding='utf8') as configFile:
+    with open('configs/Deltia_pyrosvestikis/config_deltia_singleFile.yaml', encoding='utf8') as configFile:
         config = yaml.load(configFile, yaml.FullLoader)
         
     pdf_path   = config['Input_PDF_File_PATH']

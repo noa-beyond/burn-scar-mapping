@@ -22,13 +22,13 @@ if __name__ == "__main__":
     logging.info("Starting the scheduled task...")
 
     # Path to the configuration file
-    config_file_path = 'configs/config_KML_directories.json'
+    config_file_path = 'configs/KML/config_KML_directories.json'
     
     # Run the job
     job(config_file_path)
 
     # Path to the configuration file
-    config_file_path = 'configs/config_SatellitePass.json'
+    config_file_path = 'configs/KML/config_SatellitePass.json'
     
     # Run SatellitePass_Main
     SatellitePass_Main(config_file_path)
