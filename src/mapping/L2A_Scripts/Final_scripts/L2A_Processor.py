@@ -55,13 +55,13 @@ class Processor:
             result = result.squeeze()
             result = xr.DataArray(result.values, coords={'x': result['x'], 'y': result['y']}, dims=['y', 'x']).to_dataset(name='burned')
             result.to_netcdf(os.path.join(output_dir, 'burned.nc'))
-            #result.rio.to_raster(os.path.join(output_dir, 'burned.tif'))
-            roadmasker = RoadsMasker(result, "D:\\Praktiki\\OSM_Roads\\gis_osm_roads_free_1.shp", output_dir)
-            roadmask_dir = roadmasker.mask_roads()
+            #result.rio.to_raster(os.path.join(output_dir, 'burned.tiff'))
+            ###roadmasker = RoadsMasker(result, "D:\\Praktiki\\OSM_Roads\\gis_osm_roads_free_1.shp", output_dir)
+            ###roadmask_dir = roadmasker.mask_roads()
             gdal_script = 'D:\\programs\\installed_in_D\\anaconda3\\envs\\environment_V_p_3_10\\Scripts\\gdal_polygonize.py'
             #gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.tif')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
-            gdal_command = f"python {gdal_script} {roadmask_dir} -b 1 {os.path.join(output_dir, 'burned.shp')}"
-            #gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.nc')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
+            ###gdal_command = f"python {gdal_script} {roadmask_dir} -b 1 {os.path.join(output_dir, 'burned.shp')}"
+            gdal_command = f"python {gdal_script} {os.path.join(output_dir, 'burned.nc')} -b 1 {os.path.join(output_dir, 'burned.shp')}"
             os.system(gdal_command)
             polygon = gpd.read_file(os.path.join(output_dir,'burned.shp'))
             polygon = polygon.set_crs(4326)
@@ -180,7 +180,7 @@ class Processor:
             dnbr.rio.write_crs(raw_crs, inplace=True)
             dnbr_proj = dnbr.rio.reproject("epsg:4326")
             bb_crop = [lon-0.6, lat-0.4, lon+0.6, lat+0.4]
-            print(bb_crop)
+            #print(bb_crop)
             self.export_burned_area(dnbr_proj, bb_crop, output_dir)
             return output_dir
         
