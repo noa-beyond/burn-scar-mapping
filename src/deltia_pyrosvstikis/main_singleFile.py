@@ -12,7 +12,7 @@ if __name__ == "__main__":
         
     pdf_path   = config['Input_PDF_File_PATH']
     excel_path = config['Output_Excel_File_PATH']
-
+    
     # Orizoume ena oject typou pyrosvestiki kai bazoume mesa ta DataFrames
     # pernoume tous pinakes apo to arxeio .pdf kai ta bazoume se ena DataFrame
     deltio = DeltiaFire(pdf_path)

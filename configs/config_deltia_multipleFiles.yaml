@@ -1,3 +1,3 @@
-PDF_Folder_PATH:         C:/deltia_pyrosbestikis/pdf_Data/
+PDF_Folder_PATH:         C:/Users/nikos/Desktop/data_deltia
 Database_PATH:           ./Deltia_Database.db
 Excel_Files_Output_PATH: ./excel_output/

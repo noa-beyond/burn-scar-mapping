@@ -3,6 +3,9 @@ import os
 import tabula
 import numpy as np
 import sqlite3
+from PyPDF2 import PdfReader, PdfWriter
+import shutil
+
 
 class DeltiaFire:
 
@@ -11,14 +14,43 @@ class DeltiaFire:
         self.dfs = self.get_tables_from_pdf(pdf_path_folder)
         self.pdf_path = pdf_path_folder
         
-        self.tables = self.fix_tables()
+        self.tables = self.fix_tables(self.dfs)
 
         # Database Stuff
         self.table_name_database = "Deltia_Pyrosvestikis"
 
+
+
+    #def get_tables_from_pdf(self, pdf_path):
+        # Split the PDF pages first
+        #output_folder = "split_pages_temp"
+        #os.makedirs(output_folder, exist_ok=True)
+        #split_pdf_files = self.split_pdf_pages(pdf_path, output_folder)
+        
+        # Extract tables from each split page
+        #all_tables = []
+        #for page_file in split_pdf_files:
+            #tables = tabula.read_pdf(page_file, pages='all', multiple_tables=True, java_options="-Xmx1024m")
+            #all_tables.extend(tables) 
+        # delete temp folder
+        #shutil.rmtree(output_folder)
+        #return all_tables
+
     def get_tables_from_pdf(self, pdf_path):
-        # get tables from pdf with tabula OCR
-        return tabula.read_pdf(pdf_path, pages='all', multiple_tables=True)
+        return tabula.read_pdf(pdf_path, pages='all', multiple_tables=True, java_options="-Xmx1024m")
+
+    #def split_pdf_pages(self, pdf_path, output_folder):
+        #pdf_reader = PdfReader(pdf_path)
+        #for page_num in range(len(pdf_reader.pages)):
+            #pdf_writer = PdfWriter()
+            #pdf_writer.add_page(pdf_reader.pages[page_num])
+            
+            #output_filename = os.path.join(output_folder, f'page_{page_num + 1}.pdf')
+            #with open(output_filename, 'wb') as output_file:
+                #pdf_writer.write(output_file)
+        
+        #return [os.path.join(output_folder, f'page_{i + 1}.pdf') for i in range(len(pdf_reader.pages))]
+
 
 
     def sum_numbers(self, cell):
@@ -34,32 +66,47 @@ class DeltiaFire:
         return total
 
 
-    def fix_tables(self):
-        tables = self.dfs
-        for i in range(0, len(tables)):
-            tables[i].drop(["ΧΡΟΝΟΛΟΓΙΑ",
-                            "Unnamed: 1",
-                            "Unnamed: 2",
-                            "Unnamed: 3",
-                            "Unnamed: 4",
-                            "Unnamed: 5",
-                            "ΠΡΟΣΩΠΙΚΟ",
-                            "Unnamed: 6",
-                            "Unnamed: 7",
-                            "ΜΕΣΑ",
-                            "Unnamed: 8",
-                            "Unnamed: 9"],
-                           axis=1, inplace=True)
+    def fix_tables(self, tables):
 
+        columns_to_drop = ["ΧΡΟΝΟΛΟΓΙΑ",
+                           "Unnamed: 1",
+                           "Unnamed: 2",
+                           "Unnamed: 3",
+                           "Unnamed: 4",
+                           "Unnamed: 5",
+                           "ΠΡΟΣΩΠΙΚΟ",
+                           "Unnamed: 6",
+                           "Unnamed: 7",
+                           "ΜΕΣΑ",
+                           "Unnamed: 8",
+                           "Unnamed: 9"]
+
+        filtered_tables = []
+        i = 0
+        for table in tables:
+            if all(column in table.columns for column in columns_to_drop):
+                table.to_excel(f't{i}.xlsx', header=True, index=False)
+                table.drop(columns_to_drop, axis=1, inplace=True)
+                filtered_tables.append(table)
+                i += 1
+            else:
+                table.to_excel(f'testtttttttt{i}.xlsx', header=True, index=False)
+                i += 1    
+        tables = filtered_tables 
+
+        for i in range(0, len(tables)):
             tables[i].rename(columns={'ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ': 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ',
-                                      'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ': 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ',
-                                      'Unnamed: 0': 'ΩΡΑ ΕΝΑΡΞΗΣ'},
-                             inplace=True)
+                                    'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ': 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ',
+                                    'Unnamed: 0': 'ΩΡΑ ΕΝΑΡΞΗΣ'},
+                            inplace=True)
 
             tables[i]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'] = tables[i]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'].apply(self.sum_numbers)
 
             tables[i] = tables[i].drop(tables[i][tables[i]['Α/Α'] == 'Α/Α ΠΥΡΚ'].index)
             tables[i] = tables[i].drop(tables[i][tables[i]['ΩΡΑ ΕΝΑΡΞΗΣ'] == 'ΕΝΑΡ.'].index)
+            #print(tables[0].columns, tables[1].columns)
+
+                
         return tables
 
     def fix_names(self, table):
@@ -70,6 +117,11 @@ class DeltiaFire:
                 table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ'] = f"{table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']} {table.at[i, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']}"
                 if pd.isna(table.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ']):
                     table.at[i + 2, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = table.at[i + 1, 'ΩΡΑ ΕΝΑΡΞΗΣ']
+            elif pd.isna(table.at[i, 'Α/Α']) and pd.isna(table.at[i, 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ']) or pd.isna(table.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ']):
+                table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ'] = f"{table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']} {table.at[i, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']}"
+                if pd.isna(table.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ']):
+                    table.at[i + 0, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = table.at[i - 1, 'ΩΡΑ ΕΝΑΡΞΗΣ'] 
+                    
         return table
 
     def check_for_nans(self, table):
