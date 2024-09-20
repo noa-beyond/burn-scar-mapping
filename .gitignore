@@ -170,3 +170,4 @@ cython_debug/
 *.prj
 *.cpg
 
+output/

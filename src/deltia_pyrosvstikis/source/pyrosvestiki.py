@@ -21,35 +21,11 @@ class DeltiaFire:
 
 
 
-    #def get_tables_from_pdf(self, pdf_path):
-        # Split the PDF pages first
-        #output_folder = "split_pages_temp"
-        #os.makedirs(output_folder, exist_ok=True)
-        #split_pdf_files = self.split_pdf_pages(pdf_path, output_folder)
-        
-        # Extract tables from each split page
-        #all_tables = []
-        #for page_file in split_pdf_files:
-            #tables = tabula.read_pdf(page_file, pages='all', multiple_tables=True, java_options="-Xmx1024m")
-            #all_tables.extend(tables) 
-        # delete temp folder
-        #shutil.rmtree(output_folder)
-        #return all_tables
-
     def get_tables_from_pdf(self, pdf_path):
+        tables = tabula.read_pdf(pdf_path, pages='all', multiple_tables=True, java_options="-Xmx1024m")
+        #tables[0].to_excel('test.xlsx')
         return tabula.read_pdf(pdf_path, pages='all', multiple_tables=True, java_options="-Xmx1024m")
 
-    #def split_pdf_pages(self, pdf_path, output_folder):
-        #pdf_reader = PdfReader(pdf_path)
-        #for page_num in range(len(pdf_reader.pages)):
-            #pdf_writer = PdfWriter()
-            #pdf_writer.add_page(pdf_reader.pages[page_num])
-            
-            #output_filename = os.path.join(output_folder, f'page_{page_num + 1}.pdf')
-            #with open(output_filename, 'wb') as output_file:
-                #pdf_writer.write(output_file)
-        
-        #return [os.path.join(output_folder, f'page_{i + 1}.pdf') for i in range(len(pdf_reader.pages))]
 
 
 
@@ -66,10 +42,11 @@ class DeltiaFire:
         return total
 
 
-    def fix_tables(self, tables):
 
+
+    def fix_tables(self, tables):
+        
         columns_to_drop = ["ΧΡΟΝΟΛΟΓΙΑ",
-                           "Unnamed: 1",
                            "Unnamed: 2",
                            "Unnamed: 3",
                            "Unnamed: 4",
@@ -85,19 +62,21 @@ class DeltiaFire:
         i = 0
         for table in tables:
             if all(column in table.columns for column in columns_to_drop):
-                table.to_excel(f't{i}.xlsx', header=True, index=False)
+                #table.to_excel(f't{i}.xlsx', header=True, index=False)
                 table.drop(columns_to_drop, axis=1, inplace=True)
                 filtered_tables.append(table)
                 i += 1
             else:
-                table.to_excel(f'testtttttttt{i}.xlsx', header=True, index=False)
+                #table.to_excel(f'testtttttttt{i}.xlsx', header=True, index=False)
+                print('Problem with PDF file :', self.pdf_path)
                 i += 1    
         tables = filtered_tables 
 
         for i in range(0, len(tables)):
             tables[i].rename(columns={'ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ': 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ',
                                     'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ': 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ',
-                                    'Unnamed: 0': 'ΩΡΑ ΕΝΑΡΞΗΣ'},
+                                    'Unnamed: 0': 'ΩΡΑ ΕΝΑΡΞΗΣ',
+                                    'Unnamed: 1': 'ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'},
                             inplace=True)
 
             tables[i]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'] = tables[i]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'].apply(self.sum_numbers)
@@ -113,14 +92,18 @@ class DeltiaFire:
         for i in range(table.shape[0]):
             if pd.isna(table.at[i, 'Α/Α']) and pd.notna(table.at[i, 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ']):
                 table.at[i - 1, 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ'] = f"{table.at[i - 1, 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ']} {table.at[i, 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ']}"
+
             elif pd.isna(table.at[i, 'Α/Α']) and pd.isna(table.at[i, 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ']):
                 table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ'] = f"{table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']} {table.at[i, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']}"
                 if pd.isna(table.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ']):
                     table.at[i + 2, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = table.at[i + 1, 'ΩΡΑ ΕΝΑΡΞΗΣ']
+                    table.at[i + 2, 'ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'] = table.at[i + 1, 'ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ']
+
             elif pd.isna(table.at[i, 'Α/Α']) and pd.isna(table.at[i, 'ΠΥΡΟΣΒΕΣΤΙΚΗ ΥΠΗΡΕΣΙΑ']) or pd.isna(table.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ']):
                 table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ'] = f"{table.at[i - 1, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']} {table.at[i, 'ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ']}"
                 if pd.isna(table.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ']):
-                    table.at[i + 0, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = table.at[i - 1, 'ΩΡΑ ΕΝΑΡΞΗΣ'] 
+                    table.at[i + 0, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = table.at[i - 1, 'ΩΡΑ ΕΝΑΡΞΗΣ']
+                    table.at[i + 0, 'ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'] = table.at[i - 1, 'ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'] 
                     
         return table
 
@@ -165,6 +148,8 @@ class DeltiaFire:
                                    'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ',
                                    'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ',
                                    'ΩΡΑ ΕΝΑΡΞΗΣ',
+                                   'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ',
+                                   'ΩΡΑ ΛΗΞΗΣ',
                                    'ΚΑΜΕΝΗ ΕΚΤΑΣΗ',
                                    'Εντοπισμός FireHUB',
                                    'Αιτιολογία',
@@ -193,6 +178,7 @@ class DeltiaFire:
             # print(chunk3)
             chunk4 = merged_tables.iloc[i:i + 2]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'].values
             # print(chunk4)
+            chuck5 = merged_tables.iloc[i:i + 2]['ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'].values
 
             if len(chunk1) == 2:
                 first_value1, second_value1 = chunk1
@@ -223,6 +209,13 @@ class DeltiaFire:
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = first_value4
             else:
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = chunk4
+
+            if len(chuck5) == 2:
+                first_value5, second_value5 = chuck5
+                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = first_value5
+                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
+            else:
+                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = chuck5    
 
         # save pdf file name for every entry
         df['PDF File Name'] = str(os.path.basename(self.pdf_path))
@@ -262,6 +255,8 @@ class DeltiaFire:
                                "ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ" = ?,
                                "ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ" = ?,
                                "ΩΡΑ ΕΝΑΡΞΗΣ" = ?,
+                               "ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ" = ?,
+                               "ΩΡΑ ΛΗΞΗΣ" = ?,
                                "ΚΑΜΕΝΗ ΕΚΤΑΣΗ" = ?,
                                "PDF File Name" = ?
                                WHERE "Α/Α" = ?;
@@ -270,6 +265,8 @@ class DeltiaFire:
                                row['ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'],
                                row['ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'],
                                row['ΩΡΑ ΕΝΑΡΞΗΣ'],
+                               row['ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'],
+                               row['ΩΡΑ ΛΗΞΗΣ'],
                                row['ΚΑΜΕΝΗ ΕΚΤΑΣΗ'],
                                row['PDF File Name'],
                                row['Α/Α']))
@@ -282,16 +279,20 @@ class DeltiaFire:
                                   "ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ",
                                   "ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ",
                                   "ΩΡΑ ΕΝΑΡΞΗΣ",
+                                  "ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ",
+                                  "ΩΡΑ ΛΗΞΗΣ",
                                   "ΚΑΜΕΝΗ ΕΚΤΑΣΗ",
                                   "PDF File Name"
                                   )
-                                  VALUES (?, ?, ?, ?, ?, ?, ?);
+                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
                                   """,(
                                   row['Α/Α'],
                                   row['ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ'],
                                   row['ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'],
                                   row['ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'],
                                   row['ΩΡΑ ΕΝΑΡΞΗΣ'],
+                                  row['ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'],
+                                  row['ΩΡΑ ΛΗΞΗΣ'],
                                   row['ΚΑΜΕΝΗ ΕΚΤΑΣΗ'],
                                   row['PDF File Name']
                                      ))
@@ -374,6 +375,8 @@ class DeltiaFire:
                                    'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ',
                                    'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ',
                                    'ΩΡΑ ΕΝΑΡΞΗΣ',
+                                   'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ',
+                                   'ΩΡΑ ΛΗΞΗΣ',
                                    'ΚΑΜΕΝΗ ΕΚΤΑΣΗ',
                                    'Εντοπισμός FireHUB',
                                    'Αιτιολογία',
@@ -402,6 +405,7 @@ class DeltiaFire:
             # print(chunk3)
             chunk4 = merged_tables.iloc[i:i + 2]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'].values
             # print(chunk4)
+            chuck5 = merged_tables.iloc[i:i + 2]['ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'].values
 
             if len(chunk1) == 2:
                 first_value1, second_value1 = chunk1
@@ -432,6 +436,14 @@ class DeltiaFire:
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = first_value4
             else:
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = chunk4
+
+            if len(chuck5) == 2:
+                first_value5, second_value5 = chuck5
+                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = first_value5
+                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
+            else:
+                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = chuck5
+
 
         # save pdf file name for every entry
         df['PDF File Name'] = str(os.path.basename(self.pdf_path))

@@ -17,6 +17,9 @@ import yaml
 from source.SearchSentinelOpenDataCube import SearchSentinel
 import rioxarray
 from affine import Affine
+from osgeo import gdal, ogr, osr
+import os
+import geopandas as gpd
 
 """ 
 STAC Datasets : https://stacspec.org/en/about/datasets/
@@ -213,3 +216,230 @@ class FireMonitor:
             transform=transform,
         ) as image_tiff:
             image_tiff.write(imageData[:, :], 1) # one band only
+
+
+
+    def polygonize(self, dnbrFile, outputFileName, EPSG):
+        # Open the DNBR tiff file
+        dnbr = gdal.Open(dnbrFile)
+        if dnbr is None:
+            raise RuntimeError(f"Could not open {dnbrFile}")
+
+        band = dnbr.GetRasterBand(1)
+        nodata_value = band.GetNoDataValue()  # Get the NoData value if it exists
+        dnbr_array = band.ReadAsArray()  # Read the raster data as a NumPy array
+
+        # Apply the threshold: set values >= 0.1 to 1, and others to 0
+        masked_array = np.where(dnbr_array >= 0.2, 1, 0)
+
+        # Create an in-memory raster to hold the mask
+        mem_driver = gdal.GetDriverByName('MEM')
+        mem_raster = mem_driver.Create('', dnbr.RasterXSize, dnbr.RasterYSize, 1, gdal.GDT_Byte)
+        mem_raster.SetGeoTransform(dnbr.GetGeoTransform())
+        mem_raster.SetProjection(dnbr.GetProjection())
+        
+        # Write the mask into the in-memory raster
+        mem_band = mem_raster.GetRasterBand(1)
+        mem_band.WriteArray(masked_array)
+        if nodata_value is not None:
+            mem_band.SetNoDataValue(0)  # Set NoData value for the in-memory raster
+
+        # Create the output shapefile
+        driver = ogr.GetDriverByName("ESRI Shapefile")
+        out_dnbr = driver.CreateDataSource(outputFileName)
+
+        # Create spatial reference from EPSG code
+        srs = osr.SpatialReference()
+        epsg_code = int(EPSG.split(':')[1]) if isinstance(EPSG, str) else EPSG
+        srs.ImportFromEPSG(epsg_code)
+
+        # Create the output layer
+        out_layer = out_dnbr.CreateLayer('polygonized', srs=srs, geom_type=ogr.wkbPolygon)
+
+        # Add a new field to store pixel values
+        new_field = ogr.FieldDefn('DN', ogr.OFTInteger)
+        out_layer.CreateField(new_field)
+
+        # Polygonize the masked raster
+        gdal.Polygonize(mem_band, None, out_layer, 0, [], callback=None)
+
+        # Create the filtered shapefile
+        filtered_filename = outputFileName.replace('.shp', '_filtered.shp')
+        filtered_dnbr = driver.CreateDataSource(filtered_filename)
+
+        # Create the filtered layer
+        filtered_layer = filtered_dnbr.CreateLayer('polygonized', srs=srs, geom_type=ogr.wkbPolygon)
+        filtered_layer.CreateField(new_field)
+
+        # Copy only DN = 1 polygons to the filtered layer
+        for feature in out_layer:
+            if feature.GetField('DN') == 1:
+                filtered_layer.CreateFeature(feature)
+
+
+        # Clean up and close datasets
+        del dnbr
+        del mem_raster
+        del out_dnbr
+        del filtered_dnbr
+
+        # Clean up the initial shapefile if it exists
+        if os.path.exists(outputFileName):
+            os.remove(outputFileName)
+            os.remove(outputFileName.replace('.shp', '.dbf'))
+            os.remove(outputFileName.replace('.shp', '.prj'))
+            os.remove(outputFileName.replace('.shp', '.shx'))
+
+
+        # Keep only the largest polygon from the filtered shapefile
+        largest_polygon_filename = filtered_filename.replace('.shp', '_largest.shp')
+
+        # Use geopandas to read and find the largest polygon
+        gdf = gpd.read_file(filtered_filename)
+        
+        # Compute the area of each polygon and find the largest one
+        gdf['area'] = gdf.geometry.area
+        largest_polygon = gdf.loc[gdf['area'].idxmax()]
+
+        # Create a new GeoDataFrame with only the largest polygon
+        largest_gdf = gpd.GeoDataFrame([largest_polygon], columns=gdf.columns, crs=gdf.crs)
+        largest_gdf.to_file(largest_polygon_filename)
+
+
+
+        # Clean up the initial shapefile if it exists
+        if os.path.exists(filtered_filename):
+            os.remove(filtered_filename)
+            os.remove(filtered_filename.replace('.shp', '.dbf'))
+            os.remove(filtered_filename.replace('.shp', '.prj'))
+            os.remove(filtered_filename.replace('.shp', '.shx'))
+
+
+        self.crop_tiff_with_shapefile(dnbrFile, largest_polygon_filename, 'test2.tiff')
+        print('Polygonization complete. Output saved to', filtered_filename)
+
+
+
+    
+    def classify(self, dnbrFile, outputFileName, EPSG):
+
+        # Open the DNBR TIFF file
+        dnbr = gdal.Open(dnbrFile)
+        if dnbr is None:
+            raise RuntimeError(f"Could not open {dnbrFile}")
+
+        band = dnbr.GetRasterBand(1)
+        nodata_value = band.GetNoDataValue()  # Get the NoData value if it exists
+        dnbr_array = band.ReadAsArray()  # Read the raster data as a NumPy array
+
+        # Apply classification thresholds
+        dNBR_thresholds = {
+            'unburned': (0, 0.1),
+            'low': (0.1, 0.27),
+            'moderate': (0.27, 0.44),
+            'high': (0.44, 0.66),
+            'very high': (0.66, np.inf)
+        }
+
+        # Create a classification array
+        classification_array = np.zeros_like(dnbr_array, dtype=np.uint8)
+
+        # Assign classifications based on thresholds
+        for idx, (category, (low, high)) in enumerate(dNBR_thresholds.items()):
+            mask = (dnbr_array > low) & (dnbr_array <= high)
+            classification_array[mask] = idx + 1
+
+        # Create an in-memory raster to hold the classification
+        mem_driver = gdal.GetDriverByName('MEM')
+        mem_raster = mem_driver.Create('', dnbr.RasterXSize, dnbr.RasterYSize, 1, gdal.GDT_Byte)
+        mem_raster.SetGeoTransform(dnbr.GetGeoTransform())
+        mem_raster.SetProjection(dnbr.GetProjection())
+        
+        # Write the classification into the in-memory raster
+        mem_band = mem_raster.GetRasterBand(1)
+        mem_band.WriteArray(classification_array)
+        if nodata_value is not None:
+            mem_band.SetNoDataValue(0)  # Set NoData value for the in-memory raster
+
+        # Create the output shapefile
+        driver = ogr.GetDriverByName("ESRI Shapefile")
+        out_dnbr = driver.CreateDataSource(outputFileName)
+
+        # Create spatial reference from EPSG code
+        srs = osr.SpatialReference()
+        epsg_code = int(EPSG.split(':')[1]) if isinstance(EPSG, str) else EPSG
+        srs.ImportFromEPSG(epsg_code)
+
+        # Create the output layer
+        out_layer = out_dnbr.CreateLayer('polygonized', srs=srs, geom_type=ogr.wkbPolygon)
+
+        # Add a new field for classification
+        new_field = ogr.FieldDefn('Class', ogr.OFTInteger)
+        out_layer.CreateField(new_field)
+
+        # Add a new field for color
+        color_field = ogr.FieldDefn('Color', ogr.OFTString)
+        out_layer.CreateField(color_field)
+
+        # Polygonize the classified raster
+        gdal.Polygonize(mem_band, None, out_layer, 0, [], callback=None)
+
+        # Define colors for each class
+        colors = {
+            1: '#FFFF00',  # yellow for 'low'
+            2: '#FFBF00',  # orange for 'moderate'
+            3: '#FF8000',  # dark orange for 'high'
+            4: '#FF0000',  # red for 'very high'
+            0: '#FFFFFF'   # white for 'unburned'
+        }
+
+        # Assign colors to polygons based on classification
+        for feature in out_layer:
+            class_id = feature.GetField('Class')
+            color = colors.get(class_id, '#FFFFFF')
+            feature.SetField('Color', color)
+            out_layer.SetFeature(feature)
+
+        # Clean up and close datasets
+        del dnbr
+        del mem_raster
+        del out_dnbr
+
+        print('Classification and polygonization complete. Output saved to', outputFileName)
+
+
+
+
+    def crop_tiff_with_shapefile(self, tiff_file, shapefile, output_tiff):
+        from shapely.geometry import mapping
+        from rasterio.mask import mask
+        # Read the shapefile
+        gdf = gpd.read_file(shapefile)
+        
+        # Open the TIFF file
+        with rasterio.open(tiff_file) as src:
+            # Convert the geometries to the same CRS as the TIFF file
+            if gdf.crs != src.crs:
+                gdf = gdf.to_crs(src.crs)
+            
+            # Get geometries from shapefile
+            geometries = [mapping(geom) for geom in gdf.geometry]
+            
+            # Mask the raster using the shapefile geometries
+            out_image, out_transform = mask(src, geometries, crop=True)
+            
+            # Update metadata
+            out_meta = src.meta.copy()
+            out_meta.update({
+                "driver": "GTiff",
+                "count": 1,
+                "height": out_image.shape[1],
+                "width": out_image.shape[2],
+                "transform": out_transform
+            })
+            
+            # Write the cropped image to a new TIFF file
+            with rasterio.open(output_tiff, "w", **out_meta) as dest:
+                dest.write(out_image)
+
+        print(f'Cropped TIFF saved to {output_tiff}')     

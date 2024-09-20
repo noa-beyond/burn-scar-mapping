@@ -23,6 +23,6 @@ if __name__ == "__main__":
             deltio.save_to_database(database_path)
             
             # apothikeusi kathe deltiou 3exorista
-            deltio.save_to_excel(excel_path_outputs)
+            #deltio.save_to_excel(excel_path_outputs)
             print('\n')
     print('Done!')
