@@ -5,7 +5,9 @@ import numpy as np
 import sqlite3
 from PyPDF2 import PdfReader, PdfWriter
 import shutil
-
+import datetime
+from unidecode import unidecode
+import unicodedata
 
 class DeltiaFire:
 
@@ -18,13 +20,14 @@ class DeltiaFire:
 
         # Database Stuff
         self.table_name_database = "Deltia_Pyrosvestikis"
+        self.current_year = datetime.datetime.now().year
 
 
 
     def get_tables_from_pdf(self, pdf_path):
-        tables = tabula.read_pdf(pdf_path, pages='all', multiple_tables=True, java_options="-Xmx1024m")
+        #tables = tabula.read_pdf(pdf_path, pages='all', multiple_tables=True, java_options="-Xmx1024m")
         #tables[0].to_excel('test.xlsx')
-        return tabula.read_pdf(pdf_path, pages='all', multiple_tables=True, java_options="-Xmx1024m")
+        return tabula.read_pdf(pdf_path, pages='all', multiple_tables=True)
 
 
 
@@ -146,6 +149,7 @@ class DeltiaFire:
         df = pd.DataFrame(columns=['Α/Α',
                                    'ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ',
                                    'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ',
+                                   'DHMOS-KOINOTITA Latin',
                                    'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ',
                                    'ΩΡΑ ΕΝΑΡΞΗΣ',
                                    'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ',
@@ -158,6 +162,10 @@ class DeltiaFire:
                                    'Εικόνες Seviri για έλεγχο',
                                    'PDF File Name'
                                    ])
+
+
+        merged_tables['DHMOS-KOINOTITA Latin'] = merged_tables['ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ'].str.replace('Δ.', '', regex=False)
+        merged_tables['DHMOS-KOINOTITA Latin'] = merged_tables['DHMOS-KOINOTITA Latin'].apply(self.normalize_and_transliterate)
 
         rows = []
         for i in range(0, len(merged_tables), 2):
@@ -179,6 +187,9 @@ class DeltiaFire:
             chunk4 = merged_tables.iloc[i:i + 2]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'].values
             # print(chunk4)
             chuck5 = merged_tables.iloc[i:i + 2]['ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'].values
+            #print(chuck5)
+            chunk6 = merged_tables.iloc[i:i + 2]['DHMOS-KOINOTITA Latin'].values
+            #print(chunk6)
 
             if len(chunk1) == 2:
                 first_value1, second_value1 = chunk1
@@ -199,7 +210,8 @@ class DeltiaFire:
 
             if len(chunk3) == 2:
                 first_value3, second_value3 = chunk3
-                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = first_value3
+                day3, month3 = first_value3.split('/')
+                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = str(self.current_year) + '/' + month3 + '/' + day3
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = second_value3
             else:
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = chunk3
@@ -211,11 +223,22 @@ class DeltiaFire:
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = chunk4
 
             if len(chuck5) == 2:
-                first_value5, second_value5 = chuck5
-                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = first_value5
-                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
+                if isinstance(chuck5[0], str) or isinstance(chuck5[1], str):
+                    first_value5, second_value5 = chuck5
+                    day5, month5 = first_value5.split('/')
+                    df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = str(self.current_year) + '/' + month5 + '/' + day5
+                    df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
+                    
+                #elif np.any(np.isnan(float(chuck5[0]))) and np.any(np.isnan(float(chuck5[1]))):
+                    #continue
             else:
-                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = chuck5    
+                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = chuck5
+
+            if len(chunk6) == 2:
+                first_value6, second_value6 = chunk6   
+                df.at[i, 'DHMOS-KOINOTITA Latin'] = first_value6
+            else:
+                df.at[i, 'DHMOS-KOINOTITA Latin'] = chunk6    
 
         # save pdf file name for every entry
         df['PDF File Name'] = str(os.path.basename(self.pdf_path))
@@ -253,6 +276,7 @@ class DeltiaFire:
                                SET
                                "ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ" = ?,
                                "ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ" = ?,
+                               "DHMOS-KOINOTITA Latin" = ?,
                                "ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ" = ?,
                                "ΩΡΑ ΕΝΑΡΞΗΣ" = ?,
                                "ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ" = ?,
@@ -263,6 +287,7 @@ class DeltiaFire:
                                """,(
                                row['ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ'],
                                row['ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'],
+                               row['DHMOS-KOINOTITA Latin'],
                                row['ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'],
                                row['ΩΡΑ ΕΝΑΡΞΗΣ'],
                                row['ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'],
@@ -277,6 +302,7 @@ class DeltiaFire:
                                   "Α/Α", 
                                   "ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ",
                                   "ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ",
+                                  "DHMOS-KOINOTITA Latin",
                                   "ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ",
                                   "ΩΡΑ ΕΝΑΡΞΗΣ",
                                   "ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ",
@@ -284,11 +310,12 @@ class DeltiaFire:
                                   "ΚΑΜΕΝΗ ΕΚΤΑΣΗ",
                                   "PDF File Name"
                                   )
-                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                                   """,(
                                   row['Α/Α'],
                                   row['ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ'],
                                   row['ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'],
+                                  row['DHMOS-KOINOTITA Latin'],
                                   row['ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'],
                                   row['ΩΡΑ ΕΝΑΡΞΗΣ'],
                                   row['ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'],
@@ -373,6 +400,7 @@ class DeltiaFire:
         df = pd.DataFrame(columns=['Α/Α',
                                    'ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ',
                                    'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ',
+                                   'DHMOS-KOINOTITA Latin',
                                    'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ',
                                    'ΩΡΑ ΕΝΑΡΞΗΣ',
                                    'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ',
@@ -386,6 +414,9 @@ class DeltiaFire:
                                    'PDF File Name'
                                    ])
 
+        merged_tables['DHMOS-KOINOTITA Latin'] = merged_tables['ΔΗΜΟΣ/ΚΟΙΝΟΤΗΤΑ'].str.replace('Δ.', '', regex=False)
+        merged_tables['DHMOS-KOINOTITA Latin'] = merged_tables['DHMOS-KOINOTITA Latin'].apply(self.normalize_and_transliterate)
+        
         rows = []
         for i in range(0, len(merged_tables), 2):
             # pernoume dedomena ana 2 grammes
@@ -406,6 +437,9 @@ class DeltiaFire:
             chunk4 = merged_tables.iloc[i:i + 2]['ΚΑΜΕΝΗ ΕΚΤΑΣΗ (Στρέμματα)'].values
             # print(chunk4)
             chuck5 = merged_tables.iloc[i:i + 2]['ΠΛΗΡΗΣ ΚΑΤΑΣΒΕΣΗ'].values
+            #print(chuck5)
+            chunk6 = merged_tables.iloc[i:i + 2]['DHMOS-KOINOTITA Latin'].values
+            #print(chunk6)
 
             if len(chunk1) == 2:
                 first_value1, second_value1 = chunk1
@@ -417,34 +451,45 @@ class DeltiaFire:
                     df.at[i, 'ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ'] = f"{first_value1}, {second_value1}"
             else:
                 df.at[i, 'ΠΥΡ/ΚΗ ΥΠΗΡΕΣΙΑ'] = chunk1
-
+            
             if len(chunk2) == 2:
                 first_value2, second_value2 = chunk2
                 df.at[i, 'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'] = first_value2
             else:
                 df.at[i, 'ΔΗΜΟΣ-ΚΟΙΝΟΤΗΤΑ'] = chunk2
-
+            
             if len(chunk3) == 2:
                 first_value3, second_value3 = chunk3
-                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = first_value3
+                day3, month3 = first_value3.split('/')
+                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = str(self.current_year) + '/' + month3 + '/' + day3
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = second_value3
             else:
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = chunk3
-
+            
             if len(chunk4) == 2:
                 first_value4, second_value4 = chunk4
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = first_value4
             else:
                 df.at[i, 'ΚΑΜΕΝΗ ΕΚΤΑΣΗ'] = chunk4
-
+            
             if len(chuck5) == 2:
-                first_value5, second_value5 = chuck5
-                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = first_value5
-                df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
+                if isinstance(chuck5[0], str) or isinstance(chuck5[1], str):
+                    first_value5, second_value5 = chuck5
+                    day5, month5 = first_value5.split('/')
+                    df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = str(self.current_year) + '/' + month5 + '/' + day5
+                    df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
+                    
+                #elif np.any(np.isnan(float(chuck5[0]))) and np.any(np.isnan(float(chuck5[1]))):
+                    #continue
             else:
                 df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = chuck5
-
-
+            
+            if len(chunk6) == 2:
+                first_value6, second_value6 = chunk6   
+                df.at[i, 'DHMOS-KOINOTITA Latin'] = first_value6
+            else:
+                df.at[i, 'DHMOS-KOINOTITA Latin'] = chunk6
+        
         # save pdf file name for every entry
         df['PDF File Name'] = str(os.path.basename(self.pdf_path))
 
@@ -457,3 +502,14 @@ class DeltiaFire:
         df.to_excel(excel_path_name, header=True, index=False)
 
         return 0
+    
+
+
+    def normalize_and_transliterate(self, text):
+        if isinstance(text, float):
+            return 'nan'
+        # Normalize the text (NFKD form)
+        normalized_text = unicodedata.normalize('NFKD', text)
+        # Remove accents using unidecode and convert to lowercase
+        transliterated_text = unidecode(normalized_text).lower()
+        return transliterated_text
