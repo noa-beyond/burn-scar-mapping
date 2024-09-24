@@ -20,6 +20,7 @@ from affine import Affine
 from osgeo import gdal, ogr, osr
 import os
 import geopandas as gpd
+from scipy.ndimage import median_filter
 
 """ 
 STAC Datasets : https://stacspec.org/en/about/datasets/
@@ -219,7 +220,10 @@ class FireMonitor:
 
 
 
-    def polygonize(self, dnbrFile, outputFileName, EPSG):
+    def polygonize(self, outputFolder, EPSG, threshold):
+        dnbrFile = outputFolder + 'dnbr.tiff'
+        outputFileName = outputFolder + 'dnbr_polygon.shp'
+        
         # Open the DNBR tiff file
         dnbr = gdal.Open(dnbrFile)
         if dnbr is None:
@@ -230,7 +234,7 @@ class FireMonitor:
         dnbr_array = band.ReadAsArray()  # Read the raster data as a NumPy array
 
         # Apply the threshold: set values >= 0.1 to 1, and others to 0
-        masked_array = np.where(dnbr_array >= 0.2, 1, 0)
+        masked_array = np.where(dnbr_array >= threshold, 1, 0)
 
         # Create an in-memory raster to hold the mask
         mem_driver = gdal.GetDriverByName('MEM')
@@ -314,15 +318,15 @@ class FireMonitor:
             os.remove(filtered_filename.replace('.shp', '.prj'))
             os.remove(filtered_filename.replace('.shp', '.shx'))
 
-
-        self.crop_tiff_with_shapefile(dnbrFile, largest_polygon_filename, 'test2.tiff')
-        print('Polygonization complete. Output saved to', filtered_filename)
+        print(dnbrFile)
+        self.crop_tiff_with_shapefile(dnbrFile, largest_polygon_filename, outputFolder + 'test2.tiff')
+        print('Polygonization complete. Output saved to', largest_polygon_filename)
 
 
 
     
-    def classify(self, dnbrFile, outputFileName, EPSG):
-
+    
+    def classify(self, dnbrFile, outputFileName, outputRasterFileName, EPSG):
         # Open the DNBR TIFF file
         dnbr = gdal.Open(dnbrFile)
         if dnbr is None:
@@ -331,6 +335,9 @@ class FireMonitor:
         band = dnbr.GetRasterBand(1)
         nodata_value = band.GetNoDataValue()  # Get the NoData value if it exists
         dnbr_array = band.ReadAsArray()  # Read the raster data as a NumPy array
+
+        # Create a mask for NoData values
+        no_data_mask = np.where(dnbr_array == nodata_value, 1, 0)
 
         # Apply classification thresholds
         dNBR_thresholds = {
@@ -349,17 +356,23 @@ class FireMonitor:
             mask = (dnbr_array > low) & (dnbr_array <= high)
             classification_array[mask] = idx + 1
 
-        # Create an in-memory raster to hold the classification
+        # Apply a 3x3 median filter to the classification array, but keep NoData values unchanged
+        filtered_classification = median_filter(classification_array, size=3)
+
+        # Restore NoData values in the filtered classification
+        filtered_classification[no_data_mask == 1] = nodata_value
+
+        # Create an in-memory raster to hold the filtered classification
         mem_driver = gdal.GetDriverByName('MEM')
         mem_raster = mem_driver.Create('', dnbr.RasterXSize, dnbr.RasterYSize, 1, gdal.GDT_Byte)
         mem_raster.SetGeoTransform(dnbr.GetGeoTransform())
         mem_raster.SetProjection(dnbr.GetProjection())
         
-        # Write the classification into the in-memory raster
+        # Write the filtered classification into the in-memory raster
         mem_band = mem_raster.GetRasterBand(1)
-        mem_band.WriteArray(classification_array)
+        mem_band.WriteArray(filtered_classification)
         if nodata_value is not None:
-            mem_band.SetNoDataValue(0)  # Set NoData value for the in-memory raster
+            mem_band.SetNoDataValue(nodata_value)  # Set NoData value for the in-memory raster
 
         # Create the output shapefile
         driver = ogr.GetDriverByName("ESRI Shapefile")
@@ -381,7 +394,7 @@ class FireMonitor:
         color_field = ogr.FieldDefn('Color', ogr.OFTString)
         out_layer.CreateField(color_field)
 
-        # Polygonize the classified raster
+        # Polygonize the filtered classified raster
         gdal.Polygonize(mem_band, None, out_layer, 0, [], callback=None)
 
         # Define colors for each class
@@ -400,12 +413,37 @@ class FireMonitor:
             feature.SetField('Color', color)
             out_layer.SetFeature(feature)
 
+        # Create the output colored raster
+        with rasterio.open(dnbrFile) as src:
+            transform = from_origin(src.bounds.left, src.bounds.top, src.res[0], src.res[1])
+            
+            # Create a color array for the output raster
+            color_array = np.zeros((dnbr.RasterYSize, dnbr.RasterXSize, 3), dtype=np.uint8)
+
+            for class_id, hex_color in colors.items():
+                if class_id == 0:
+                    continue  # Skip 'unburned' since it won't be in the classification
+                rgb = [int(hex_color[i:i+2], 16) for i in (1, 3, 5)]  # Convert hex to RGB
+                color_array[filtered_classification == class_id] = rgb
+
+            # Restore NoData values in the color array
+            color_array[no_data_mask == 1] = [0, 0, 0]  # You can choose the color for NoData
+
+            # Write the colored output raster
+            with rasterio.open(outputRasterFileName, 'w', driver='GTiff', height=color_array.shape[0],
+                            width=color_array.shape[1], count=3, dtype='uint8', crs=srs.ExportToWkt(),
+                            transform=transform) as dest:
+                dest.write(color_array[:, :, 0], 1)  # Write red channel
+                dest.write(color_array[:, :, 1], 2)  # Write green channel
+                dest.write(color_array[:, :, 2], 3)  # Write blue channel
+
         # Clean up and close datasets
         del dnbr
         del mem_raster
         del out_dnbr
 
         print('Classification and polygonization complete. Output saved to', outputFileName)
+        print('Colored raster output saved to', outputRasterFileName)
 
 
 
@@ -413,21 +451,24 @@ class FireMonitor:
     def crop_tiff_with_shapefile(self, tiff_file, shapefile, output_tiff):
         from shapely.geometry import mapping
         from rasterio.mask import mask
+        import geopandas as gpd
+        import rasterio
+
         # Read the shapefile
         gdf = gpd.read_file(shapefile)
-        
+
         # Open the TIFF file
         with rasterio.open(tiff_file) as src:
             # Convert the geometries to the same CRS as the TIFF file
             if gdf.crs != src.crs:
                 gdf = gdf.to_crs(src.crs)
-            
+
             # Get geometries from shapefile
             geometries = [mapping(geom) for geom in gdf.geometry]
-            
+
             # Mask the raster using the shapefile geometries
             out_image, out_transform = mask(src, geometries, crop=True)
-            
+
             # Update metadata
             out_meta = src.meta.copy()
             out_meta.update({
@@ -435,11 +476,13 @@ class FireMonitor:
                 "count": 1,
                 "height": out_image.shape[1],
                 "width": out_image.shape[2],
-                "transform": out_transform
+                "transform": out_transform,
+                "nodata": 0  # Set a no data value if necessary
             })
-            
+
             # Write the cropped image to a new TIFF file
             with rasterio.open(output_tiff, "w", **out_meta) as dest:
-                dest.write(out_image)
+                # Remove the black box by writing only the relevant data
+                dest.write(out_image[0], 1)  # Write to the first band
 
         print(f'Cropped TIFF saved to {output_tiff}')     

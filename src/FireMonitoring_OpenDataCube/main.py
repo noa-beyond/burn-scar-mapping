@@ -14,15 +14,14 @@ if __name__ == "__main__":
 
     with open('configs/FireMonitoring_OpenDataCube/config_fire_monitor.yaml', 'r') as file_config:
         config = yaml.load(file_config, yaml.FullLoader)
-        start_DATE = config['start_DATE']
-        end_DATE   = config['end_DATE']
-        cloudCover = config['cloudCover']
-        EPSG       = config['EPSG']
+        start_DATE   = config['start_DATE']
+        end_DATE     = config['end_DATE']
+        cloudCover   = config['cloudCover']
+        EPSG         = config['EPSG']
+        outputFolder = config['outputFolder']
     file_config.close()
 
     
-    outputFolder = 'src/FireMonitoring_OpenDataCube/output/'
-
     # init fire object
     fire = FireMonitor(burnedAreaBox, start_DATE, end_DATE, cloudCover)
     
@@ -33,11 +32,11 @@ if __name__ == "__main__":
     #fire.save_tiff_single('nbr_post', outputFolder + 'nbr_post.tiff', EPSG)
     #fire.save_tiff_single('nbr_pre', outputFolder + 'nbr_pre.tiff', EPSG)
 
-    fire.save_tiff_single('dnbr', outputFolder + 'dnbr.tiff', EPSG)
+    fire.save_tiff_single('dnbr', outputFolder+'dnbr.tiff', EPSG)
     
-    fire.polygonize(outputFolder + 'dnbr.tiff', outputFolder + 'dnbr_poygon_01.shp', EPSG)
+    fire.polygonize(outputFolder, EPSG, 0.2)
 
-    fire.classify('test2.tiff', outputFolder + 'test.tiff', EPSG)
+    fire.classify(outputFolder + 'test2.tiff', outputFolder + 'test.tiff',outputFolder+'raster.tiff', EPSG)
 
     #fire.data.nbr.plot(col='time', cmap='Greys_r', col_wrap=4)
     print(f'Saving plot with pre and post images..')
