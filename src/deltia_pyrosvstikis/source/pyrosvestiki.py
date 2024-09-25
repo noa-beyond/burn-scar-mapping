@@ -155,11 +155,11 @@ class DeltiaFire:
                                    'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ',
                                    'ΩΡΑ ΛΗΞΗΣ',
                                    'ΚΑΜΕΝΗ ΕΚΤΑΣΗ',
-                                   'Εντοπισμός FireHUB',
-                                   'Αιτιολογία',
-                                   'Ώρα εντοπισμού',
+                                   'ΕΝΤΟΠΙΣΜΟΣ FireHUB',
+                                   'ΗΜΕΡΟΜΗΝΙΑ ΚΑΙ ΩΡΑ ΕΝΤΟΠΙΣΜΟΥ Firehub',
+                                   'ΑΙΤΙΟΛΟΓΙΑ ΜΗ ΕΝΤΟΠΙΣΜΟΥ',
+                                   'ΕΙΚΟΝΕΣ Seviri ΓΙΑ ΕΛΕΓΧΟ',
                                    'ΨΗΦΙΟΠΟΙΗΣΗ',
-                                   'Εικόνες Seviri για έλεγχο',
                                    'PDF File Name'
                                    ])
 
@@ -211,7 +211,7 @@ class DeltiaFire:
             if len(chunk3) == 2:
                 first_value3, second_value3 = chunk3
                 day3, month3 = first_value3.split('/')
-                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = str(self.current_year) + '/' + month3 + '/' + day3
+                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = str(self.current_year) + '-' + month3 + '-' + day3
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = second_value3
             else:
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = chunk3
@@ -226,7 +226,7 @@ class DeltiaFire:
                 if isinstance(chuck5[0], str) or isinstance(chuck5[1], str):
                     first_value5, second_value5 = chuck5
                     day5, month5 = first_value5.split('/')
-                    df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = str(self.current_year) + '/' + month5 + '/' + day5
+                    df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = str(self.current_year) + '-' + month5 + '-' + day5
                     df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
                     
                 #elif np.any(np.isnan(float(chuck5[0]))) and np.any(np.isnan(float(chuck5[1]))):
@@ -406,11 +406,11 @@ class DeltiaFire:
                                    'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ',
                                    'ΩΡΑ ΛΗΞΗΣ',
                                    'ΚΑΜΕΝΗ ΕΚΤΑΣΗ',
-                                   'Εντοπισμός FireHUB',
-                                   'Αιτιολογία',
-                                   'Ώρα εντοπισμού',
+                                   'ΕΝΤΟΠΙΣΜΟΣ FireHUB',
+                                   'ΗΜΕΡΟΜΗΝΙΑ ΚΑΙ ΩΡΑ ΕΝΤΟΠΙΣΜΟΥ Firehub',
+                                   'ΑΙΤΙΟΛΟΓΙΑ ΜΗ ΕΝΤΟΠΙΣΜΟΥ',
+                                   'ΕΙΚΟΝΕΣ Seviri ΓΙΑ ΕΛΕΓΧΟ',
                                    'ΨΗΦΙΟΠΟΙΗΣΗ',
-                                   'Εικόνες Seviri για έλεγχο',
                                    'PDF File Name'
                                    ])
 
@@ -461,7 +461,7 @@ class DeltiaFire:
             if len(chunk3) == 2:
                 first_value3, second_value3 = chunk3
                 day3, month3 = first_value3.split('/')
-                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = str(self.current_year) + '/' + month3 + '/' + day3
+                df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΕΝΑΡΞΗΣ'] = str(self.current_year) + '-' + month3 + '-' + day3
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = second_value3
             else:
                 df.at[i, 'ΩΡΑ ΕΝΑΡΞΗΣ'] = chunk3
@@ -476,7 +476,7 @@ class DeltiaFire:
                 if isinstance(chuck5[0], str) or isinstance(chuck5[1], str):
                     first_value5, second_value5 = chuck5
                     day5, month5 = first_value5.split('/')
-                    df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = str(self.current_year) + '/' + month5 + '/' + day5
+                    df.at[i, 'ΗΜΕΡΟΜΗΝΙΑ ΛΗΞΗΣ'] = str(self.current_year) + '-' + month5 + '-' + day5
                     df.at[i, 'ΩΡΑ ΛΗΞΗΣ'] = second_value5
                     
                 #elif np.any(np.isnan(float(chuck5[0]))) and np.any(np.isnan(float(chuck5[1]))):
@@ -513,3 +513,8 @@ class DeltiaFire:
         # Remove accents using unidecode and convert to lowercase
         transliterated_text = unidecode(normalized_text).lower()
         return transliterated_text
+    
+
+
+        
+        
