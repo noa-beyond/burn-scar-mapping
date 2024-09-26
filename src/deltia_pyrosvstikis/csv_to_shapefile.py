@@ -20,8 +20,8 @@ def csv_to_shapefile(input_csv, output_shapefile, geometry_column='the_geom', cr
     gdf.to_file(output_shapefile, driver='ESRI Shapefile', encoding='utf-8')
 
 # Example usage:
-input_csv = 'C:/Users/nikos/Downloads/c7b5978b-aca9-4d74-b8a5-d3a48d02f6d0.csv'  # Path to the input CSV file
-output_shapefile = 'C:/Users/nikos/Downloads/dimoi.shp'  # Path to the output Shapefile
+input_csv = 'C:/Users/nikos/Desktop/greece_dimoi/KAPODISTRIAS/greece_dimoi_kapodistrias.csv'  # Path to the input CSV file
+output_shapefile = 'C:/Users/nikos/Desktop/greece_dimoi/KAPODISTRIAS/dimoi_kapodistrias.shp'  # Path to the output Shapefile
 
 
 csv_to_shapefile(input_csv, output_shapefile)
