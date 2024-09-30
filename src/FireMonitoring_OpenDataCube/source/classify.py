@@ -22,25 +22,26 @@ import os
 import geopandas as gpd
 from scipy.ndimage import median_filter
 from source.polygonize import polygonize
+from shapely.wkt import loads as wkt_loads
+from shapely.geometry import Polygon, MultiPolygon
+from scipy.ndimage import gaussian_filter1d  # Ensure this import is present
 
 
 
 
 class classify:
-    def __init__(self, dnbr_xr, outputFolder, EPSG):        
+    def __init__(self, dnbr_xr, outputFolder, FireName, EPSG):        
         
         # Classification thresholds
         dnbr_thresholds = {
-            'unburned': (0.00, 0.10),
             'low':      (0.10, 0.27),
             'moderate': (0.27, 0.44),
             'high':     (0.44, 0.66),
-            'very high':(0.66, np.inf)
+            'very high':(0.66, 1.50)
             }
         
         # define Colors for classes
         colors = {
-            0: '#FFFFFF', # white for 'unburned'
             1: '#FFFF00', # yellow for 'low'
             2: '#FFBF00', # orange for 'moderate'
             3: '#FF8000', # dark orange for 'high'
@@ -59,18 +60,19 @@ class classify:
         height = dnbrData.shape[0]
 
         dnbr_array = dnbrData.values
-        nodata_value = -9999#np.nan
+        nodata_value = 0#np.nan
         
         # maska gia ta nodata values sti eikona 
         # etsi oste meta to filtro na ta epanaferoume
         no_data_mask = np.isnan(dnbr_array)
         
-        class_array = np.zeros_like(dnbr_array, dtype=np.uint8)
-        
+        class_array = np.full(dnbr_array.shape, fill_value=0, dtype=np.uint8)  # Initialize with 0
+                
         # do the classification
         for index, (category, (low, high)) in enumerate(dnbr_thresholds.items()):
             mask = (dnbr_array > low) & (dnbr_array <= high)
             class_array[mask] = index + 1
+            
             
         # apply filter to classification raster to smooth out noise
         class_array = median_filter(class_array, size=3)
@@ -90,8 +92,8 @@ class classify:
         if nodata_value is not None:
             memory_band.SetNoDataValue(nodata_value)
 
-        # create shapefile and save it
-        driver = ogr.GetDriverByName('ESRI Shapefile')
+        # create shapefile in memory
+        driver = ogr.GetDriverByName('Memory')
         out_class_dnbr = driver.CreateDataSource(outputFolder + 'classified')
         
         # create epsg if needed
@@ -101,8 +103,7 @@ class classify:
         
         # create output layer
         out_layer = out_class_dnbr.CreateLayer('classified', srs=srs, geom_type=ogr.wkbPolygon)
-        if out_layer is None:
-            raise RuntimeError("Failed to create output layer.")
+
         # add new field for the classification into the layer numbers 0 to 5
         new_field = ogr.FieldDefn('Class', ogr.OFTInteger)
         out_layer.CreateField(new_field)    
@@ -111,17 +112,48 @@ class classify:
         color_field = ogr.FieldDefn('Color', ogr.OFTString)
         out_layer.CreateField(color_field)
         
+        # raster to vector
         gdal.Polygonize(memory_band, None, out_layer, 0, [], callback=None)
         
 
         for feature in out_layer:
             class_id = feature.GetField('Class')
-            color = colors.get(class_id, '#FFFFFF') # if class not found then put #FFFFFF
+            color = colors.get(class_id) 
             feature.SetField('Color', color)
             out_layer.SetFeature(feature)
             
+        # Convert features to polygons and keep fields
+        polygons = []
+        class_values = []
+        color_values = []
+        
+        for feature in out_layer:
+            polygons.append(wkt_loads(feature.GetGeometryRef().ExportToWkt()))
+            class_values.append(feature.GetField('Class'))
+            color_values.append(feature.GetField('Color'))
+        
+        # Create GeoDataFrame with geometry and original fields
+        gdf = gpd.GeoDataFrame({
+            'geometry': polygons,
+            'Class': class_values,
+            'Color': color_values
+        }, crs=srs.ExportToProj4())
+
+
+        # make output folder
+        os.makedirs(outputFolder + '/' + 'classified', exist_ok=True)
+        
+        gdf['geometry'] = gdf['geometry'].apply(lambda geom: self.gaussian_smooth_polygon(geom, sigma=1))
+        gdf = gdf[gdf['Class'] != 0]
+        
+        gdf.to_file(os.path.join(outputFolder + '/' + 'Classify_Polygon' '/' + FireName + '_Classify_Polygon.shp'))
+        
+        
+
+
+
         # write rgb image of the classification
-        with rasterio.open(outputFolder+'classified.tiff',
+        with rasterio.open(os.path.join(outputFolder, FireName + '_Classify_Raster.tiff'),
                            'w',
                            driver='GTiff',
                            height=height,
@@ -149,79 +181,51 @@ class classify:
         del memory_raster, out_class_dnbr
         print('Classification and polygonization complete. Output saved to', outputFolder)
         print('Colored raster output saved to', outputFolder)
-        self.save_qml(outputFolder, colors)
+        #self.save_qml(outputFolder, colors)
 
-    def save_qml(self, outputFolder, colors):
-        qml_content = """<?xml version="1.0" encoding="UTF-8"?>
-        <qgis version="3.16" >
-            <layer name="classified" type="vector">
-                <layerstyle>
-                    <renderer-v2 type="categorizedSymbol">
-                        <categories>
-                            <category>
-                                <filter>( "Class" = 0 )</filter>
-                                <symbol>
-                                    <layer type="polygon" name="0">
-                                        <color>{color_0}</color>
-                                        <strokeColor>#000000</strokeColor>
-                                        <strokeWidth>0.5</strokeWidth>
-                                    </layer>
-                                </symbol>
-                            </category>
-                            <category>
-                                <filter>( "Class" = 1 )</filter>
-                                <symbol>
-                                    <layer type="polygon" name="0">
-                                        <color>{color_1}</color>
-                                        <strokeColor>#000000</strokeColor>
-                                        <strokeWidth>0.5</strokeWidth>
-                                    </layer>
-                                </symbol>
-                            </category>
-                            <category>
-                                <filter>( "Class" = 2 )</filter>
-                                <symbol>
-                                    <layer type="polygon" name="0">
-                                        <color>{color_2}</color>
-                                        <strokeColor>#000000</strokeColor>
-                                        <strokeWidth>0.5</strokeWidth>
-                                    </layer>
-                                </symbol>
-                            </category>
-                            <category>
-                                <filter>( "Class" = 3 )</filter>
-                                <symbol>
-                                    <layer type="polygon" name="0">
-                                        <color>{color_3}</color>
-                                        <strokeColor>#000000</strokeColor>
-                                        <strokeWidth>0.5</strokeWidth>
-                                    </layer>
-                                </symbol>
-                            </category>
-                            <category>
-                                <filter>( "Class" = 4 )</filter>
-                                <symbol>
-                                    <layer type="polygon" name="0">
-                                        <color>{color_4}</color>
-                                        <strokeColor>#000000</strokeColor>
-                                        <strokeWidth>0.5</strokeWidth>
-                                    </layer>
-                                </symbol>
-                            </category>
-                        </categories>
-                    </renderer-v2>
-                </layerstyle>
-            </layer>
-        </qgis>
-        """.format(
-            color_0=colors[0],
-            color_1=colors[1],
-            color_2=colors[2],
-            color_3=colors[3],
-            color_4=colors[4]
-        )
+    def gaussian_smooth_polygon(self, geom, sigma=1):
+        """Smooth the polygon using a Gaussian filter while preserving holes."""
         
-        qml_file_path = os.path.join(outputFolder, 'classified.qml')
-        with open(qml_file_path, 'w') as qml_file:
-            qml_file.write(qml_content)
-        print('QML style file saved to', qml_file_path)
+        if geom.is_empty:
+            return geom  # Return empty geometries unchanged
+
+        # Handle Polygon type
+        if isinstance(geom, Polygon):
+            exterior = geom.exterior
+            interiors = geom.interiors
+
+            # Smooth the exterior coordinates
+            x, y = exterior.xy
+            x_smooth = gaussian_filter1d(x, sigma)
+            y_smooth = gaussian_filter1d(y, sigma)
+
+            # Create a new smoothed exterior polygon
+            smoothed_exterior = Polygon(zip(x_smooth, y_smooth))
+
+            # Create a list to hold smoothed interiors
+            smoothed_interiors = []
+            for interior in interiors:
+                x_int, y_int = interior.xy
+                x_int_smooth = gaussian_filter1d(x_int, sigma)
+                y_int_smooth = gaussian_filter1d(y_int, sigma)
+                smoothed_interiors.append(Polygon(zip(x_int_smooth, y_int_smooth)))
+
+            # Create a new Polygon with the smoothed exterior and interiors
+            if smoothed_interiors:  # Check if there are any interiors
+                smoothed_polygon = Polygon(smoothed_exterior.exterior.coords, [interior.exterior.coords for interior in smoothed_interiors])
+            else:
+                smoothed_polygon = smoothed_exterior  # No interiors
+
+            return smoothed_polygon
+
+        # Handle MultiPolygon type
+        elif isinstance(geom, MultiPolygon):
+            smoothed_polygons = []
+            for poly in geom.geoms:
+                smoothed_poly = self.gaussian_smooth_polygon(poly, sigma)
+                smoothed_polygons.append(smoothed_poly)
+            return MultiPolygon(smoothed_polygons)
+
+        # If geometry is not a Polygon or MultiPolygon, return it unchanged
+        return geom
+

@@ -22,13 +22,15 @@ import os
 import geopandas as gpd
 from scipy.ndimage import median_filter
 from shapely.wkt import loads as wkt_loads
+from shapely.geometry import Polygon, MultiPolygon
+from scipy.ndimage import gaussian_filter1d  # Ensure this import is present
 
 
 
 
 
 class polygonize:
-    def __init__(self, outputFolder, EPSG, threshold, dnbr_xr):
+    def __init__(self, outputFolder, Fire_Name, EPSG, threshold, dnbr_xr):
         # dnbr from xarray
         dnbrData = dnbr_xr
         
@@ -91,25 +93,109 @@ class polygonize:
 
          # Convert list of polygons into a GeoDataFrame
         gdf = gpd.GeoDataFrame({'geometry': polygons}, crs=srs.ExportToProj4())
-
+        
         # make output folder to store the shapefile
-        os.makedirs(outputFolder + '/' + 'DNBR_Polygon', exist_ok=True)
+        os.makedirs(f'{outputFolder} / DNBR_Polygon', exist_ok=True)
         
         # Find the largest polygon and save it
         largest_polygon = gdf.loc[gdf.geometry.area.idxmax()]
-        largest_polygon_filename = outputFolder + '/' + 'DNBR_Polygon' + '/' + 'polygon.shp'     
+
+        # smooth the final selected polygon
+        smoothed_polygon = self.gaussian_smooth_polygon(largest_polygon.geometry)  # Adjust sigma as needed
+        
+        # fill the small holes
+        smoothed_polygon = self.fill_interior_rings(smoothed_polygon, area_threshold=500) # in meteres
+
+        
+
+        largest_polygon_filename = os.path.join(outputFolder + '/' 'DBNR_Polygon', Fire_Name + '_DNBR_Polygon.shp')     
 
         # Save the largest polygon
-        largest_gdf = gpd.GeoDataFrame([largest_polygon], columns=gdf.columns, crs=gdf.crs)
+        largest_gdf = gpd.GeoDataFrame([smoothed_polygon], columns=gdf.columns, crs=gdf.crs)
         largest_gdf.to_file(largest_polygon_filename)
         print('Polygon Created! Output saved to', largest_polygon_filename)
         
-
+        
         # used in crop only
         self.polygonName = largest_polygon_filename # only used in crop
         self.dnbr = dnbrData    
 
 
+    def gaussian_smooth_polygon(self, geom, sigma=1):
+        """Smooth the polygon using a Gaussian filter while preserving holes."""
+        
+        if geom.is_empty:
+            return geom  # Return empty geometries unchanged
+
+        # Handle Polygon type
+        if isinstance(geom, Polygon):
+            exterior = geom.exterior
+            interiors = geom.interiors
+
+            # Smooth the exterior coordinates
+            x, y = exterior.xy
+            x_smooth = gaussian_filter1d(x, sigma)
+            y_smooth = gaussian_filter1d(y, sigma)
+
+            # Create a new smoothed exterior polygon
+            smoothed_exterior = Polygon(zip(x_smooth, y_smooth))
+
+            # Create a list to hold smoothed interiors
+            smoothed_interiors = []
+            for interior in interiors:
+                x_int, y_int = interior.xy
+                x_int_smooth = gaussian_filter1d(x_int, sigma)
+                y_int_smooth = gaussian_filter1d(y_int, sigma)
+                smoothed_interiors.append(Polygon(zip(x_int_smooth, y_int_smooth)))
+
+            # Create a new Polygon with the smoothed exterior and interiors
+            if smoothed_interiors:  # Check if there are any interiors
+                smoothed_polygon = Polygon(smoothed_exterior.exterior.coords, [interior.exterior.coords for interior in smoothed_interiors])
+            else:
+                smoothed_polygon = smoothed_exterior  # No interiors
+
+            return smoothed_polygon
+
+        # Handle MultiPolygon type
+        elif isinstance(geom, MultiPolygon):
+            smoothed_polygons = []
+            for poly in geom.geoms:
+                smoothed_poly = self.gaussian_smooth_polygon(poly, sigma)
+                smoothed_polygons.append(smoothed_poly)
+            return MultiPolygon(smoothed_polygons)
+
+        # If geometry is not a Polygon or MultiPolygon, return it unchanged
+        return geom
+    
+
+    def fill_interior_rings(self, geom, area_threshold):
+        """Fill small interior rings based on an area threshold."""
+        if isinstance(geom, Polygon):
+            exterior = geom.exterior
+            interiors = geom.interiors
+
+            # Start with the exterior ring
+            filled_polygon = Polygon(exterior.coords)
+
+            for interior in interiors:
+                hole_area = Polygon(interior.coords).area  # Calculate the area of the hole
+                if hole_area < area_threshold:
+                    # If the hole is smaller than the threshold, ignore it (effectively filling it)
+                    continue
+                else:
+                    # Add the larger hole as a new exterior to the filled polygon
+                    filled_polygon = filled_polygon.difference(Polygon(interior.coords))
+
+            return filled_polygon
+
+        elif isinstance(geom, MultiPolygon):
+            filled_polygons = []
+            for poly in geom.geoms:
+                filled_poly = self.fill_small_interior_rings(poly, area_threshold)
+                filled_polygons.append(filled_poly)
+            return MultiPolygon(filled_polygons)
+
+        return geom  # Return unchanged if not Polygon or MultiPolygon
 
 
 

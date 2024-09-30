@@ -1,5 +1,6 @@
-start_DATE:       '2024-06-15'
-end_DATE:         '2024-07-15'
+Fire_start_Date:  '2024-07-10'
+Fire_Name:        'xios_fire'
 EPSG:             EPSG:32635
+DNBR_Threshold:   0.1
 cloudCover:       5
 outputFolder:     src/FireMonitoring_OpenDataCube/output/

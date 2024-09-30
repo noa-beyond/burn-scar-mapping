@@ -32,12 +32,22 @@ Sentinel 2    : https://stacindex.org/catalogs/earth-search#/
 
 class FireMonitor:
 
-    def __init__(self, BurnedAreaBox_json, start_DATE, end_DATE, cloudCover, EPSG):
+    def __init__(self, BurnedAreaBox_json,
+                 start_DATE,
+                 end_DATE,
+                 cloudCover,
+                 EPSG, 
+                 DNBR_Threshold,
+                 outputFolder,
+                 Fire_Name):
+        
         self.BurnedAreaBox_json = BurnedAreaBox_json
-        self.start_DATE = start_DATE
-        self.end_DATE = end_DATE
-        self.cloudCover = cloudCover
-        self.EPSG = EPSG
+        self.start_DATE         = start_DATE
+        self.end_DATE           = end_DATE
+        self.cloudCover         = cloudCover
+        self.EPSG               = EPSG
+        self.outputFolder        = outputFolder
+        self.Fire_Name          = Fire_Name
         
         # get polygon from json file
         BurnedAreaBox = self.get_bbox(self.BurnedAreaBox_json)
@@ -70,7 +80,7 @@ class FireMonitor:
         self.dnbr = self.create_dnbr(self.nbr_post, self.nbr_pre)
         self.dnbr = self.dnbr.rio.write_crs('EPSG:4326')
         self.dnbr = self.dnbr.rio.reproject(EPSG)
-        
+        #self.dnbr.to_netcdf('dnbr', mode='w')
         self.data = data
 
         self.cropped_dnbr = None # used later in polygonize and classify
@@ -149,16 +159,19 @@ class FireMonitor:
 
 
 
-    def save_tiff_rgb(self, imageData, filePath_name):
+    def save_tiff_rgb(self, imageData):
         if imageData == 'post':
+            mode = 'POST'
             imageData = self.post_fire_image
         elif imageData == 'pre':
+            mode = 'PRE'
             imageData = self.pre_fire_image  
         else:
             print(f'Use post or pre in the first argument of save_tiff()')
             return 0 
 
-        
+        filePath_name = os.path.join(self.outputFolder, self.Fire_Name + mode + '.tiff')
+
         imageData = imageData.astype('float32')
         bands, height, width = imageData.shape
 
@@ -182,21 +195,28 @@ class FireMonitor:
 
 
 
-    def save_tiff_single(self, imageData, filePath_name):
+    def save_tiff_single(self, imageData):
+
         if imageData == 'nbr_post':
+            mode = '_NBR_POST'
             imageData = self.nbr_post
         elif imageData == 'ndvi_post':
+            mode = '_NDVI_POST'
             imageData = self.ndvi_post
         elif imageData == 'ndvi_pre':
+            mode = '_NDVI_PRE'
             imageData = self.ndvi_pre
         elif imageData == 'nbr_pre':
+            mode = '_NBR_PRE'
             imageData = self.nbr_pre
         elif imageData == 'dnbr':
+            mode = '_DNBR'
             imageData = self.dnbr        
         else:
             imageData = self.data[imageData]
 
-
+        filePath_name = os.path.join(self.outputFolder, self.Fire_Name + mode + '.tiff')
+        
         imageData = imageData.astype('float32')
         height, width = imageData.shape
 
@@ -218,171 +238,15 @@ class FireMonitor:
 
 
 
-    def polygonize(self, outputFolder, threshold):
+    def polygonize(self, threshold):
         # vlepe arxeio polygonize.py mesa sto fakelo source
-        polygonizer = polygonize(outputFolder, self.EPSG, threshold, self.dnbr)
+        polygonizer = polygonize(self.outputFolder, self.Fire_Name, self.EPSG, threshold, self.dnbr)
         self.cropped_dnbr = polygonizer.crop_dnbr()
         
     
-    def classify(self, outputFolder):
-        classify(self.cropped_dnbr, outputFolder, self.EPSG)
-        exit()
-        # Open the DNBR TIFF file
-        dnbr = gdal.Open(dnbrFile)
-        if dnbr is None:
-            raise RuntimeError(f"Could not open {dnbrFile}")
-
-        band = dnbr.GetRasterBand(1)
-        nodata_value = band.GetNoDataValue()  # Get the NoData value if it exists
-        dnbr_array = band.ReadAsArray()  # Read the raster data as a NumPy array
-
-        # Create a mask for NoData values
-        no_data_mask = np.where(dnbr_array == nodata_value, 1, 0)
-
-        # Apply classification thresholds
-        dNBR_thresholds = {
-            'unburned': (0, 0.1),
-            'low': (0.1, 0.27),
-            'moderate': (0.27, 0.44),
-            'high': (0.44, 0.66),
-            'very high': (0.66, np.inf)
-        }
-
-        # Create a classification array
-        classification_array = np.zeros_like(dnbr_array, dtype=np.uint8)
-
-        # Assign classifications based on thresholds
-        for idx, (category, (low, high)) in enumerate(dNBR_thresholds.items()):
-            mask = (dnbr_array > low) & (dnbr_array <= high)
-            classification_array[mask] = idx + 1
-
-        # Apply a 3x3 median filter to the classification array, but keep NoData values unchanged
-        filtered_classification = median_filter(classification_array, size=3)
-
-        # Restore NoData values in the filtered classification
-        filtered_classification[no_data_mask == 1] = nodata_value
-
-        # Create an in-memory raster to hold the filtered classification
-        mem_driver = gdal.GetDriverByName('MEM')
-        mem_raster = mem_driver.Create('', dnbr.RasterXSize, dnbr.RasterYSize, 1, gdal.GDT_Byte)
-        mem_raster.SetGeoTransform(dnbr.GetGeoTransform())
-        mem_raster.SetProjection(dnbr.GetProjection())
-        
-        # Write the filtered classification into the in-memory raster
-        mem_band = mem_raster.GetRasterBand(1)
-        mem_band.WriteArray(filtered_classification)
-        if nodata_value is not None:
-            mem_band.SetNoDataValue(nodata_value)  # Set NoData value for the in-memory raster
-
-        # Create the output shapefile
-        driver = ogr.GetDriverByName("ESRI Shapefile")
-        out_dnbr = driver.CreateDataSource(outputFileName)
-
-        # Create spatial reference from EPSG code
-        srs = osr.SpatialReference()
-        epsg_code = int(EPSG.split(':')[1]) if isinstance(EPSG, str) else EPSG
-        srs.ImportFromEPSG(epsg_code)
-
-        # Create the output layer
-        out_layer = out_dnbr.CreateLayer('polygonized', srs=srs, geom_type=ogr.wkbPolygon)
-
-        # Add a new field for classification
-        new_field = ogr.FieldDefn('Class', ogr.OFTInteger)
-        out_layer.CreateField(new_field)
-
-        # Add a new field for color
-        color_field = ogr.FieldDefn('Color', ogr.OFTString)
-        out_layer.CreateField(color_field)
-
-        # Polygonize the filtered classified raster
-        gdal.Polygonize(mem_band, None, out_layer, 0, [], callback=None)
-
-        # Define colors for each class
-        colors = {
-            1: '#FFFF00',  # yellow for 'low'
-            2: '#FFBF00',  # orange for 'moderate'
-            3: '#FF8000',  # dark orange for 'high'
-            4: '#FF0000',  # red for 'very high'
-            0: '#FFFFFF'   # white for 'unburned'
-        }
-
-        # Assign colors to polygons based on classification
-        for feature in out_layer:
-            class_id = feature.GetField('Class')
-            color = colors.get(class_id, '#FFFFFF')
-            feature.SetField('Color', color)
-            out_layer.SetFeature(feature)
-
-        # Create the output colored raster
-        with rasterio.open(dnbrFile) as src:
-            transform = from_origin(src.bounds.left, src.bounds.top, src.res[0], src.res[1])
-            
-            # Create a color array for the output raster
-            color_array = np.zeros((dnbr.RasterYSize, dnbr.RasterXSize, 3), dtype=np.uint8)
-
-            for class_id, hex_color in colors.items():
-                if class_id == 0:
-                    continue  # Skip 'unburned' since it won't be in the classification
-                rgb = [int(hex_color[i:i+2], 16) for i in (1, 3, 5)]  # Convert hex to RGB
-                color_array[filtered_classification == class_id] = rgb
-
-            # Restore NoData values in the color array
-            color_array[no_data_mask == 1] = [0, 0, 0]  # You can choose the color for NoData
-
-            # Write the colored output raster
-            with rasterio.open(outputRasterFileName, 'w', driver='GTiff', height=color_array.shape[0],
-                            width=color_array.shape[1], count=3, dtype='uint8', crs=srs.ExportToWkt(),
-                            transform=transform) as dest:
-                dest.write(color_array[:, :, 0], 1)  # Write red channel
-                dest.write(color_array[:, :, 1], 2)  # Write green channel
-                dest.write(color_array[:, :, 2], 3)  # Write blue channel
-
-        # Clean up and close datasets
-        del dnbr
-        del mem_raster
-        del out_dnbr
-
-        print('Classification and polygonization complete. Output saved to', outputFileName)
-        print('Colored raster output saved to', outputRasterFileName)
+    def classify(self):
+        classify(self.cropped_dnbr, self.outputFolder, self.Fire_Name, self.EPSG)
+ 
 
 
 
-
-    def crop_tiff_with_shapefile(self, tiff_file, shapefile, output_tiff):
-        from shapely.geometry import mapping
-        from rasterio.mask import mask
-        import geopandas as gpd
-        import rasterio
-
-        # Read the shapefile
-        gdf = gpd.read_file(shapefile)
-
-        # Open the TIFF file
-        with rasterio.open(tiff_file) as src:
-            # Convert the geometries to the same CRS as the TIFF file
-            if gdf.crs != src.crs:
-                gdf = gdf.to_crs(src.crs)
-
-            # Get geometries from shapefile
-            geometries = [mapping(geom) for geom in gdf.geometry]
-
-            # Mask the raster using the shapefile geometries
-            out_image, out_transform = mask(src, geometries, crop=True)
-
-            # Update metadata
-            out_meta = src.meta.copy()
-            out_meta.update({
-                "driver": "GTiff",
-                "count": 1,
-                "height": out_image.shape[1],
-                "width": out_image.shape[2],
-                "transform": out_transform,
-                "nodata": 0  # Set a no data value if necessary
-            })
-
-            # Write the cropped image to a new TIFF file
-            with rasterio.open(output_tiff, "w", **out_meta) as dest:
-                # Remove the black box by writing only the relevant data
-                dest.write(out_image[0], 1)  # Write to the first band
-
-        print(f'Cropped TIFF saved to {output_tiff}')     
