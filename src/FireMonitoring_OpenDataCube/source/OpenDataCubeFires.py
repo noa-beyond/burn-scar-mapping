@@ -21,6 +21,8 @@ from osgeo import gdal, ogr, osr
 import os
 import geopandas as gpd
 from scipy.ndimage import median_filter
+from source.polygonize import polygonize
+from source.classify import classify
 
 """ 
 STAC Datasets : https://stacspec.org/en/about/datasets/
@@ -30,11 +32,12 @@ Sentinel 2    : https://stacindex.org/catalogs/earth-search#/
 
 class FireMonitor:
 
-    def __init__(self, BurnedAreaBox_json, start_DATE, end_DATE, cloudCover):
+    def __init__(self, BurnedAreaBox_json, start_DATE, end_DATE, cloudCover, EPSG):
         self.BurnedAreaBox_json = BurnedAreaBox_json
         self.start_DATE = start_DATE
         self.end_DATE = end_DATE
         self.cloudCover = cloudCover
+        self.EPSG = EPSG
         
         # get polygon from json file
         BurnedAreaBox = self.get_bbox(self.BurnedAreaBox_json)
@@ -47,6 +50,10 @@ class FireMonitor:
 
         # remove clouds and water with masks from SCL ( https://brazil-data-cube.github.io/specifications/bands/SCL.html )
         #data = self.remove_clouds_water(data)
+
+        # reproject the data to prefered EPSG
+        #data = data.rio.write_crs('EPSG:4326') # arxiko EPSG apo to datacube
+        #data = data.rio.reproject(EPSG)
 
         data = self.create_nbr_ndvi(data)
 
@@ -61,10 +68,12 @@ class FireMonitor:
         self.ndvi_pre  = data['ndvi'].isel(time=0)
 
         self.dnbr = self.create_dnbr(self.nbr_post, self.nbr_pre)
-
+        self.dnbr = self.dnbr.rio.write_crs('EPSG:4326')
+        self.dnbr = self.dnbr.rio.reproject(EPSG)
         
         self.data = data
 
+        self.cropped_dnbr = None # used later in polygonize and classify
 
 
 
@@ -140,7 +149,7 @@ class FireMonitor:
 
 
 
-    def save_tiff_rgb(self, imageData, filePath_name, to_crs):
+    def save_tiff_rgb(self, imageData, filePath_name):
         if imageData == 'post':
             imageData = self.post_fire_image
         elif imageData == 'pre':
@@ -149,18 +158,12 @@ class FireMonitor:
             print(f'Use post or pre in the first argument of save_tiff()')
             return 0 
 
-        imageData = imageData.rio.reproject(to_crs)
         
         imageData = imageData.astype('float32')
-        
         bands, height, width = imageData.shape
 
 
-        transform = Affine.translation(imageData.x.min(),
-                                       imageData.y.max()) * Affine.scale((imageData.x.max() - imageData.x.min()) / width,
-                                        -(imageData.y.max() - imageData.y.min()) / height)           
-
-        print(f'Saving {filePath_name} with CRS {to_crs}')
+        print(f'Saving {filePath_name} with CRS {self.EPSG}')
         # Save as a TIFF file
         with rasterio.open(
             filePath_name,
@@ -170,8 +173,8 @@ class FireMonitor:
             width=width,
             count=3, # 3 channels R,G,B
             dtype=imageData.dtype,
-            crs=to_crs,
-            transform=transform,
+            crs=imageData.rio.crs,
+            transform=imageData.rio.transform(),
         ) as image_tiff:
             image_tiff.write(imageData[2, :, :], 1) # green 2, blue 3, red 4 from data array
             image_tiff.write(imageData[1, :, :], 2) 
@@ -179,7 +182,7 @@ class FireMonitor:
 
 
 
-    def save_tiff_single(self, imageData, filePath_name, to_crs):
+    def save_tiff_single(self, imageData, filePath_name):
         if imageData == 'nbr_post':
             imageData = self.nbr_post
         elif imageData == 'ndvi_post':
@@ -194,16 +197,11 @@ class FireMonitor:
             imageData = self.data[imageData]
 
 
-        #imageData = imageData.to_array()
-        imageData = imageData.rio.reproject(to_crs)
         imageData = imageData.astype('float32')
         height, width = imageData.shape
 
-        transform = Affine.translation(imageData.x.min(),
-                                imageData.y.max()) * Affine.scale((imageData.x.max() - imageData.x.min()) / width,
-                                -(imageData.y.max() - imageData.y.min()) / height)           
 
-        print(f'Saving {filePath_name} with CRS {to_crs}')
+        print(f'Saving {filePath_name} with CRS {self.EPSG}')
         # Save as a TIFF file
         with rasterio.open(
             filePath_name,
@@ -213,120 +211,22 @@ class FireMonitor:
             width=width,
             count=1, # 1 channel grayscale
             dtype=imageData.dtype,
-            crs=to_crs,
-            transform=transform,
+            crs=imageData.rio.crs,
+            transform=imageData.rio.transform(),
         ) as image_tiff:
             image_tiff.write(imageData[:, :], 1) # one band only
 
 
 
-    def polygonize(self, outputFolder, EPSG, threshold):
-        dnbrFile = outputFolder + 'dnbr.tiff'
-        outputFileName = outputFolder + 'dnbr_polygon.shp'
+    def polygonize(self, outputFolder, threshold):
+        # vlepe arxeio polygonize.py mesa sto fakelo source
+        polygonizer = polygonize(outputFolder, self.EPSG, threshold, self.dnbr)
+        self.cropped_dnbr = polygonizer.crop_dnbr()
         
-        # Open the DNBR tiff file
-        dnbr = gdal.Open(dnbrFile)
-        if dnbr is None:
-            raise RuntimeError(f"Could not open {dnbrFile}")
-
-        band = dnbr.GetRasterBand(1)
-        nodata_value = band.GetNoDataValue()  # Get the NoData value if it exists
-        dnbr_array = band.ReadAsArray()  # Read the raster data as a NumPy array
-
-        # Apply the threshold: set values >= 0.1 to 1, and others to 0
-        masked_array = np.where(dnbr_array >= threshold, 1, 0)
-
-        # Create an in-memory raster to hold the mask
-        mem_driver = gdal.GetDriverByName('MEM')
-        mem_raster = mem_driver.Create('', dnbr.RasterXSize, dnbr.RasterYSize, 1, gdal.GDT_Byte)
-        mem_raster.SetGeoTransform(dnbr.GetGeoTransform())
-        mem_raster.SetProjection(dnbr.GetProjection())
-        
-        # Write the mask into the in-memory raster
-        mem_band = mem_raster.GetRasterBand(1)
-        mem_band.WriteArray(masked_array)
-        if nodata_value is not None:
-            mem_band.SetNoDataValue(0)  # Set NoData value for the in-memory raster
-
-        # Create the output shapefile
-        driver = ogr.GetDriverByName("ESRI Shapefile")
-        out_dnbr = driver.CreateDataSource(outputFileName)
-
-        # Create spatial reference from EPSG code
-        srs = osr.SpatialReference()
-        epsg_code = int(EPSG.split(':')[1]) if isinstance(EPSG, str) else EPSG
-        srs.ImportFromEPSG(epsg_code)
-
-        # Create the output layer
-        out_layer = out_dnbr.CreateLayer('polygonized', srs=srs, geom_type=ogr.wkbPolygon)
-
-        # Add a new field to store pixel values
-        new_field = ogr.FieldDefn('DN', ogr.OFTInteger)
-        out_layer.CreateField(new_field)
-
-        # Polygonize the masked raster
-        gdal.Polygonize(mem_band, None, out_layer, 0, [], callback=None)
-
-        # Create the filtered shapefile
-        filtered_filename = outputFileName.replace('.shp', '_filtered.shp')
-        filtered_dnbr = driver.CreateDataSource(filtered_filename)
-
-        # Create the filtered layer
-        filtered_layer = filtered_dnbr.CreateLayer('polygonized', srs=srs, geom_type=ogr.wkbPolygon)
-        filtered_layer.CreateField(new_field)
-
-        # Copy only DN = 1 polygons to the filtered layer
-        for feature in out_layer:
-            if feature.GetField('DN') == 1:
-                filtered_layer.CreateFeature(feature)
-
-
-        # Clean up and close datasets
-        del dnbr
-        del mem_raster
-        del out_dnbr
-        del filtered_dnbr
-
-        # Clean up the initial shapefile if it exists
-        if os.path.exists(outputFileName):
-            os.remove(outputFileName)
-            os.remove(outputFileName.replace('.shp', '.dbf'))
-            os.remove(outputFileName.replace('.shp', '.prj'))
-            os.remove(outputFileName.replace('.shp', '.shx'))
-
-
-        # Keep only the largest polygon from the filtered shapefile
-        largest_polygon_filename = filtered_filename.replace('.shp', '_largest.shp')
-
-        # Use geopandas to read and find the largest polygon
-        gdf = gpd.read_file(filtered_filename)
-        
-        # Compute the area of each polygon and find the largest one
-        gdf['area'] = gdf.geometry.area
-        largest_polygon = gdf.loc[gdf['area'].idxmax()]
-
-        # Create a new GeoDataFrame with only the largest polygon
-        largest_gdf = gpd.GeoDataFrame([largest_polygon], columns=gdf.columns, crs=gdf.crs)
-        largest_gdf.to_file(largest_polygon_filename)
-
-
-
-        # Clean up the initial shapefile if it exists
-        if os.path.exists(filtered_filename):
-            os.remove(filtered_filename)
-            os.remove(filtered_filename.replace('.shp', '.dbf'))
-            os.remove(filtered_filename.replace('.shp', '.prj'))
-            os.remove(filtered_filename.replace('.shp', '.shx'))
-
-        print(dnbrFile)
-        self.crop_tiff_with_shapefile(dnbrFile, largest_polygon_filename, outputFolder + 'test2.tiff')
-        print('Polygonization complete. Output saved to', largest_polygon_filename)
-
-
-
     
-    
-    def classify(self, dnbrFile, outputFileName, outputRasterFileName, EPSG):
+    def classify(self, outputFolder):
+        classify(self.cropped_dnbr, outputFolder, self.EPSG)
+        exit()
         # Open the DNBR TIFF file
         dnbr = gdal.Open(dnbrFile)
         if dnbr is None:

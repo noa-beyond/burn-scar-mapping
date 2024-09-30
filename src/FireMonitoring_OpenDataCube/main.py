@@ -23,20 +23,24 @@ if __name__ == "__main__":
 
     
     # init fire object
-    fire = FireMonitor(burnedAreaBox, start_DATE, end_DATE, cloudCover)
+    fire = FireMonitor(burnedAreaBox,
+                       start_DATE, 
+                       end_DATE,
+                       cloudCover, 
+                       EPSG)
     
     # save the post and pre fire auto selected images
-    #fire.save_tiff_rgb('post', outputFolder + 'post_fire_RGB.tiff', EPSG)
-    #fire.save_tiff_rgb('pre', outputFolder + 'pre_fire_RGB.tiff', EPSG)
+    #fire.save_tiff_rgb('post', outputFolder + 'post_fire_RGB.tiff')
+    #fire.save_tiff_rgb('pre', outputFolder + 'pre_fire_RGB.tiff')
 
-    #fire.save_tiff_single('nbr_post', outputFolder + 'nbr_post.tiff', EPSG)
-    #fire.save_tiff_single('nbr_pre', outputFolder + 'nbr_pre.tiff', EPSG)
+    #fire.save_tiff_single('nbr_post', outputFolder + 'nbr_post.tiff')
+    #fire.save_tiff_single('nbr_pre', outputFolder + 'nbr_pre.tiff')
 
-    fire.save_tiff_single('dnbr', outputFolder+'dnbr.tiff', EPSG)
+    fire.save_tiff_single('dnbr', outputFolder+'dnbr.tiff')
     
-    fire.polygonize(outputFolder, EPSG, 0.2)
+    fire.polygonize(outputFolder, 0.2)
 
-    fire.classify(outputFolder + 'test2.tiff', outputFolder + 'test.tiff',outputFolder+'raster.tiff', EPSG)
+    fire.classify(outputFolder)
 
     #fire.data.nbr.plot(col='time', cmap='Greys_r', col_wrap=4)
     print(f'Saving plot with pre and post images..')
