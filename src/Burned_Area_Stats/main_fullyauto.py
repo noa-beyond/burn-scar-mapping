@@ -38,19 +38,19 @@ if __name__ == "__main__":
     BurnedAreas_PATH = config['BurnedAreas_PATH']
 
     # load output folder path and check if it exists or not
-    out_path         = config['OutputFolder_PATH']
+    out_path = config['OutputFolder_PATH']
 
     # create output folder if not exists
     if not os.path.exists(out_path):
         os.mkdir(out_path)
 
     # get burned areas folder name and calculate stats for all burned areas one by one
-    BurnedAreas = os.listdir(BurnedAreas_PATH)
+    BurnedAreas = [i for i in os.listdir(BurnedAreas_PATH) if not i.endswith('stats')] 
 
     # loop over all folder(s) containing burned area(s) shapefiles and calc stats
     for BurnedArea in BurnedAreas:
         # get name of burened area shpapefile inside folder for saving later
-        for filename in os.listdir(BurnedAreas_PATH + BurnedArea):
+        for filename in os.listdir(BurnedAreas_PATH + BurnedArea): #TODO: check if it is a folder
             if filename.endswith('.shp'):
                 # get burned area shapefile name from folder
                 BurnedArea_PATH = BurnedAreas_PATH + BurnedArea + '/' + filename
@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 print('Burned Area:', burned_area_polygon_name)
 
         # reset output folder in every loop
-        output_path = config['OutputFolder_PATH']
+        output_path = config['OutputFolder_PATH'] #TODO: check if this is right or line 41
         # make output folder named as the burned area shapefile inside output folder
         if not os.path.exists(output_path + burned_area_polygon_name + '_stats'): 
             os.mkdir(output_path + burned_area_polygon_name + '_stats' + '/')
