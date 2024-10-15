@@ -2,12 +2,10 @@ affine==2.4.0
 autoroot==1.0.1
 beautifulsoup4==4.12.3
 contextily==1.6.0
-geogif==0.2
 geopandas==1.0.1
 htmltools==0.5.3
 lxml==5.3.0
 matplotlib==3.9.2
-numpy==2.1.1
 odc_geo==0.4.8
 odc_io==0.2.2
 odc_stac==0.3.10
